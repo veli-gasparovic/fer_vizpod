@@ -1,4 +1,3 @@
-// D3 code for creating a simple chart in the center section
 const svg = d3.select(".chart");
 const width = svg.node().clientWidth;
 const height = svg.node().clientHeight;
@@ -53,9 +52,12 @@ function render(data) {
   //   let's add x axis to the bottom:
   const xAxis = d3
     .axisBottom(xScale)
-    // print only years every 10 years
-    .tickValues(xScale.domain().filter((d, i) => i % 10 === 0))
-    .tickFormat((d) => d.year);
+    .tickValues(xScale.domain().filter((d, i) => i % 20 === 0))
+    .tickFormat((i) => data[i].year);
 
-  svg.append("g").attr("transform", `translate(0, ${height})`).call(xAxis);
+  svg
+    .append("g")
+    .attr("transform", `translate(0, ${height})`)
+    .call(xAxis)
+    .call((g) => g.selectAll(".domain").remove());
 }
