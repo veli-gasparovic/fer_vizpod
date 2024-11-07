@@ -3,19 +3,17 @@
   padding: 0;
   box-sizing: border-box;
   color: #2d2d2d;
+  background-color: #f8f9fa;
 }
 
-/* Main container fills the whole viewport */
 .container {
   display: flex;
   flex-direction: column;
   height: 100vh;
 }
 
-/* Top, center, and bottom sections with specific height percentages */
 .top {
   height: 25%;
-  background-color: #f8f9fa;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -37,12 +35,12 @@
   justify-content: center;
 }
 
-/* Chart styles for better visibility */
 .chart {
   width: 100%;
   height: 100%;
 }
 
 svg {
-  overflow: visible;
+  overflow: visible;  
+  background-color: #f8f9fa;
 }
