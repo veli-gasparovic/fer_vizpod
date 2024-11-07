@@ -55,7 +55,9 @@ function render(data) {
 
     //   add a mouseover to transition the rect 10 pixels up and add a text showing the year and anomaly
     rect.on("mouseover", (event) => {
-      rect.transition().attr("y", -offset);
+      rect.transition().duration(250).attr("y", -offset);
+
+      rect.attr("stroke", "black").attr("stroke-width", 1).raise();
 
       const tooltipGroup = svg
         .append("g")
@@ -69,6 +71,12 @@ function render(data) {
         .style("font-family", "sans-serif")
         .style("dominant-baseline", "hanging");
 
+      tooltipGroup
+        .style("opacity", 0)
+        .transition()
+        .duration(250)
+        .style("opacity", 1);
+
       tooltipGroup.append("text").text(`${d.year}.`);
 
       tooltipGroup
@@ -78,8 +86,8 @@ function render(data) {
     });
 
     // add a mouseout to transition the rect back to its original position and remove the text
-    rect.on("mouseout", (event) => {
-      rect.transition().attr("y", 0);
+    rect.on("mouseout", function (event) {
+      d3.select(this).transition().attr("y", 0).attr("stroke", "none");
       svg.selectAll("g.tooltip").remove();
     });
   });
