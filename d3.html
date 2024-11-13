@@ -189,6 +189,8 @@
         }
         //append circles to the svg element
         svg
+          .append("g")
+          .attr("class", "scatter-group")
           .selectAll("circle.scatter")
           .data(scatterData, (d) => d)
           .enter()
@@ -196,9 +198,10 @@
           .attr("class", "scatter")
           .attr("cx", (d) => xScale(d.x))
           .attr("cy", (d) => yScale(d.y))
-          .attr("r", 5)
-          .attr("fill", "#2b8cbe")
-          .attr("stroke", "white");
+          .attr("r", 6)
+          .attr("fill", "#bcbddc")
+          .attr("stroke", "black")
+          .attr("stroke-width", 2);
         //RESCALE:
         //lets rescale y to be between 0 and 100 and transition the circles and scale
         yScale.domain([0, 50]);
@@ -206,16 +209,13 @@
           .selectAll("circle.scatter")
           .transition()
           .duration(2000)
-          .attr("cy", (d) => yScale(d.y))
-          .on("end", function () {
-            console.log("transition ended, add line");
-            addLine(svg, scatterData);
-          });
-        
-          // transition the yAxis
+          .attr("cy", (d) => yScale(d.y));
+
+        // transition the yAxis
         svg.select(".y-axis").transition().duration(2000).call(yAxis);
 
-        function addLine(svg, scatterData) {
+        //after 3000ms call addLine(svg, scatterData);
+        setTimeout(() => {
           const g = svg.append("g").attr("opacity", 0);
 
           const line = d3
@@ -223,12 +223,15 @@
             .x((d) => xScale(d.x))
             .y((d) => yScale(d.y))
             .curve(d3.curveMonotoneX);
+          //https://www.d3indepth.com/examples-merged/shapes/curve-explorer/
 
           g.append("path")
             .datum(scatterData)
             .attr("d", line)
             .attr("fill", "none")
-            .attr("stroke", "black");
+            .attr("stroke", "black")
+            .attr("stroke-width", 4)
+            .attr("stroke-opacity", 0.5);
 
           const area = d3
             .area()
@@ -243,8 +246,8 @@
             .attr("fill", "#e34a33");
 
           g.transition().duration(2000).attr("opacity", 1);
-          svg.selectAll("circle").raise();
-        }
+          svg.select(".scatter-group").raise();
+        }, 3000);
       }
     </script>
   </body>
