@@ -4,173 +4,248 @@
     <ul></ul>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script>
-      d3.select("h1").transition().duration(2000).style("color", "red");
+      //SELECTION
+      const title = d3.select("h1");
 
+      //   console.log(title);
+      //   debugger;
+      //   .transition().duration(2000).style("color", "red");
+
+      //MODIFICATION
+      title.style("color", "green");
+
+      //TRANSITION
+      title.transition().duration(2000).style("color", "red");
+
+      //INTERACTIVITY
+      title.on("click", function () {
+        //on click change to a random color from the d3 tableau10 color scheme
+        d3.select(this)
+          .transition()
+          .style("color", d3.schemeTableau10[Math.floor(Math.random() * 10)]);
+
+        //change cursor to pointer CSS style
+      });
+
+      //DATA
       var data = d3.range(10);
+      console.log(data);
       //   debugger;
 
-      d3.select("ul")
-        .selectAll("li")
-        .data(data, (d) => d)
-        .enter()
-        .append("li")
-        .text((d) => d);
+      // ======== //
+      //   loopListItems(data);
+      //   svgIntro();
+      render();
 
-      //remove a random element from the data
-      data.splice(Math.floor(Math.random() * data.length), 1);
+      function loopListItems(data) {
+        d3.interval(() => {
+          var dataCopy = data.slice();
+          dataCopy.splice(Math.floor(Math.random() * dataCopy.length), 1);
 
-      d3.selectAll("li")
-        .data(data, (d) => d)
-        .exit()
-        .transition()
-        .duration(2000)
-        .style("color", "white")
-        .on("end", function () {
-          d3.select(this).remove();
-        });
+          console.log(dataCopy);
 
-      // let's append a 300 x 300 svg element to the body
-      var svg = d3
-        .select("body")
-        .append("svg")
-        .attr("width", 600)
-        .attr("height", 600)
-        .style("border", "1px solid black");
+          d3.selectAll("li")
+            .data(dataCopy, (d) => d)
+            .exit()
+            .transition()
+            .duration(1000)
+            .style("color", "white")
+            .on("end", function () {
+              d3.select(this).remove();
+            });
 
-      //   // let's append a circle to the svg element
-      //   svg
-      //     .append("circle")
-      //     .attr("cx", 300)
-      //     .attr("cy", 300)
-      //     .attr("r", 100)
-      //     .style("fill", "orange");
-
-      //   let circleData = d3.range(10);
-
-      //   //using the data array, let's append blue circles
-      //   svg
-      //     .selectAll("circle.blue")
-      //     .data(circleData, (d) => d)
-      //     .enter()
-      //     .append("circle")
-      //     .attr("class", "blue")
-      //     .attr("cx", (d) => d * 50 + 50)
-      //     .attr("cy", (d) => d * 50 + 50)
-      //     .attr("r", (d) => 10 + d)
-      //     .style("fill", "blue");
-
-      //   //remove a random element from the data
-      //   circleData.splice(Math.floor(Math.random() * data.length), 1);
-
-      //   svg
-      //     .selectAll("circle.blue")
-      //     .data(circleData, (d) => d)
-      //     .exit()
-      //     .transition()
-      //     .duration(2000)
-      //     .style("opacity", 0)
-      //     .on("end", function () {
-      //       d3.select(this).remove();
-      //     });
-
-      //   //let's add basic mouse event interactivity on circles
-      //   svg.selectAll("circle.blue").on("mouseover", function () {
-      //     d3.select(this)
-      //       .style("fill", "yellow")
-      //       .style("stroke", "black")
-      //       .style("stroke-width", 2);
-
-      //     console.log("hoveram datapoint", d3.select(this).data());
-      //   });
-
-      //   svg.selectAll("circle.blue").on("mouseout", function () {
-      //     d3.select(this).style("fill", "blue").style("stroke", "none");
-      //   });
-
-      //   let's create x scale and axis
-      var xScale = d3.scaleLinear().domain([0, 10]).range([0, 600]);
-      var xAxis = d3.axisBottom(xScale);
-
-      var yScale = d3.scaleLinear().domain([0, 10]).range([600, 0]);
-      var yAxis = d3.axisLeft(yScale);
-
-      svg
-        .append("g")
-        .call(xAxis)
-        .attr("class", "x-axis")
-        .attr("transform", "translate(0, 600)");
-      svg
-        .append("g")
-        .call(yAxis)
-        .attr("class", "y-axis")
-        .attr("transform", "translate(0, 0)");
-
-      svg.style("overflow", "visible");
-      svg.style("margin-left", "100px");
-
-      //generate a 10 point data array, each having x and y values between 0 and 10
-      var scatterData = [];
-
-      for (var i = 0; i < 11; i++) {
-        scatterData.push({
-          x: i,
-          y: Math.random() * 10,
-        });
+          d3.select("ul")
+            .selectAll("li")
+            .data(dataCopy, (d) => d)
+            .enter()
+            .append("li")
+            .text((d) => d)
+            //   make it flash to green
+            .style("color", "green")
+            .transition()
+            .delay(1000)
+            .duration(1000)
+            .style("color", "black");
+        }, 3000);
       }
 
-      //append circles to the svg element
-      svg
-        .selectAll("circle.scatter")
-        .data(scatterData, (d) => d)
-        .enter()
-        .append("circle")
-        .attr("class", "scatter")
-        .attr("cx", (d) => xScale(d.x))
-        .attr("cy", (d) => yScale(d.y))
-        .attr("r", 5)
-        .style("fill", "green");
+      function svgIntro() {
+        // let's append a 300 x 300 svg element to the body
+        var svg = d3
+          .select("body")
+          .append("svg")
+          .attr("width", 600)
+          .attr("height", 600)
+          .style("border", "1px solid black");
 
-      //RESCALE:
-      //   //lets rescale y to be between 0 and 100 and transition the circles and scale
-      //   yScale.domain([0, 50]);
+        // let's append a circle to the svg element
+        svg
+          .append("circle")
+          .attr("cx", 300)
+          .attr("cy", 300)
+          .attr("r", 100)
+          .style("fill", "red");
 
-      //   svg
-      //     .selectAll("circle.scatter")
-      //     .transition()
-      //     .duration(2000)
-      //     .attr("cy", (d) => yScale(d.y));
+        let circleData = d3.range(10);
 
-      //   // transition the yAxis
-      //   svg.select(".y-axis").transition().duration(2000).call(yAxis);
-      //   =====================
+        //using the data array, let's append blue circles
+        svg
+          .selectAll("circle.blue")
+          .data(circleData, (d) => d)
+          .enter()
+          .append("circle")
+          .attr("class", "blue")
+          .attr("cx", (d) => d * 50 + 50)
+          .attr("cy", (d) => d * 50 + 50)
+          .attr("r", (d) => 10 + d)
+          .style("fill", "blue");
 
-      //LINE AND AREA:
+        //remove a random element from the data
+        circleData.splice(Math.floor(Math.random() * data.length), 1);
 
-      //   let's create a line generator
-      const line = d3
-        .line()
-        .x((d) => xScale(d.x))
-        .y((d) => yScale(d.y))
-        .curve(d3.curveMonotoneX);
+        svg
+          .selectAll("circle.blue")
+          .data(circleData, (d) => d)
+          .exit()
+          .transition()
+          .duration(2000)
+          .style("opacity", 0)
+          .on("end", function () {
+            d3.select(this).remove();
+          });
 
-      svg
-        .append("path")
-        .datum(scatterData)
-        .attr("d", line)
-        .attr("fill", "none")
-        .attr("stroke", "black");
+        //let's add basic mouse event interactivity on circles
+        svg.selectAll("circle.blue").on("mouseover", function () {
+          d3.select(this)
+            .style("fill", "yellow")
+            .style("stroke", "black")
+            .style("stroke-width", 2);
 
-      const area = d3
-        .area()
-        .x((d) => xScale(d.x))
-        .y0((d) => yScale(0))
-        .y1((d) => yScale(d.y))
-        .curve(d3.curveMonotoneX);
+          console.log("hoveram datapoint", d3.select(this).data());
+        });
 
-      svg.append("path").datum(scatterData).attr("d", area).attr("fill", "red");
+        svg.selectAll("circle.blue").on("mouseout", function () {
+          d3.select(this).style("fill", "blue").style("stroke", "none");
+        });
 
-      svg.selectAll("circle").raise();
-      //   =====================
+        //   let's create x scale and axis
+        var xScale = d3.scaleLinear().domain([0, 10]).range([0, 600]);
+        var xAxis = d3.axisBottom(xScale);
+
+        var yScale = d3.scaleLinear().domain([0, 10]).range([600, 0]);
+        var yAxis = d3.axisLeft(yScale);
+
+        svg
+          .append("g")
+          .call(xAxis)
+          .attr("class", "x-axis")
+          .attr("transform", "translate(0, 600)");
+        svg
+          .append("g")
+          .call(yAxis)
+          .attr("class", "y-axis")
+          .attr("transform", "translate(0, 0)");
+
+        svg.style("overflow", "visible");
+        svg.style("margin-left", "100px");
+      }
+
+      function render() {
+        var svg = d3
+          .select("body")
+          .append("svg")
+          .attr("width", 600)
+          .attr("height", 600)
+          .style("border", "1px solid black");
+
+        //   let's create x scale and axis
+        var xScale = d3.scaleLinear().domain([0, 10]).range([0, 600]);
+        var xAxis = d3.axisBottom(xScale);
+
+        var yScale = d3.scaleLinear().domain([0, 10]).range([600, 0]);
+        var yAxis = d3.axisLeft(yScale);
+
+        svg
+          .append("g")
+          .call(xAxis)
+          .attr("class", "x-axis")
+          .attr("transform", "translate(0, 600)");
+        svg
+          .append("g")
+          .call(yAxis)
+          .attr("class", "y-axis")
+          .attr("transform", "translate(0, 0)");
+
+        svg.style("overflow", "visible");
+        svg.style("margin-left", "100px");
+
+        //generate a 10 point data array, each having x and y values between 0 and 10
+        var scatterData = [];
+        for (var i = 0; i < 11; i++) {
+          scatterData.push({
+            x: i,
+            y: Math.random() * 10,
+          });
+        }
+        //append circles to the svg element
+        svg
+          .selectAll("circle.scatter")
+          .data(scatterData, (d) => d)
+          .enter()
+          .append("circle")
+          .attr("class", "scatter")
+          .attr("cx", (d) => xScale(d.x))
+          .attr("cy", (d) => yScale(d.y))
+          .attr("r", 5)
+          .attr("fill", "#2b8cbe")
+          .attr("stroke", "white");
+        //RESCALE:
+        //lets rescale y to be between 0 and 100 and transition the circles and scale
+        yScale.domain([0, 50]);
+        svg
+          .selectAll("circle.scatter")
+          .transition()
+          .duration(2000)
+          .attr("cy", (d) => yScale(d.y))
+          .on("end", function () {
+            console.log("transition ended, add line");
+            addLine(svg, scatterData);
+          });
+        
+          // transition the yAxis
+        svg.select(".y-axis").transition().duration(2000).call(yAxis);
+
+        function addLine(svg, scatterData) {
+          const g = svg.append("g").attr("opacity", 0);
+
+          const line = d3
+            .line()
+            .x((d) => xScale(d.x))
+            .y((d) => yScale(d.y))
+            .curve(d3.curveMonotoneX);
+
+          g.append("path")
+            .datum(scatterData)
+            .attr("d", line)
+            .attr("fill", "none")
+            .attr("stroke", "black");
+
+          const area = d3
+            .area()
+            .x((d) => xScale(d.x))
+            .y0((d) => yScale(0))
+            .y1((d) => yScale(d.y))
+            .curve(d3.curveMonotoneX);
+
+          g.append("path")
+            .datum(scatterData)
+            .attr("d", area)
+            .attr("fill", "#e34a33");
+
+          g.transition().duration(2000).attr("opacity", 1);
+          svg.selectAll("circle").raise();
+        }
+      }
     </script>
   </body>
 </html>
