@@ -15,17 +15,17 @@
       title.style("color", "green");
 
       //TRANSITION
-      title.transition().duration(2000).style("color", "red");
+      // title.transition().duration(2000).style("color", "red");
 
       //INTERACTIVITY
-      title.on("click", function () {
-        //on click change to a random color from the d3 tableau10 color scheme
-        d3.select(this)
-          .transition()
-          .style("color", d3.schemeTableau10[Math.floor(Math.random() * 10)]);
+      // title.on("click", function () {
+      //   //on click change to a random color from the d3 tableau10 color scheme
+      //   d3.select(this)
+      //     .transition()
+      //     .style("color", d3.schemeTableau10[Math.floor(Math.random() * 10)]);
 
-        //change cursor to pointer CSS style
-      });
+      //   //change cursor to pointer CSS style
+      // });
 
       //DATA
       var data = d3.range(10);
@@ -33,7 +33,7 @@
       //   debugger;
 
       // ======== //
-      loopListItems(data);
+      // loopListItems(data);
       //   svgIntro();
       // render();
 
