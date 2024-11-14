@@ -1,6 +1,10 @@
+// https://en.wikipedia.org/wiki/Warming_stripes
+
 const svg = d3.select(".chart");
 const width = svg.node().clientWidth;
 const height = svg.node().clientHeight;
+
+svg.style("background-color", "purple");
 
 //read the data form a local wordl_annual.json file
 d3.json("world_annual.json").then((data) => {
@@ -15,6 +19,8 @@ d3.json("world_annual.json").then((data) => {
     };
   });
 
+  console.log(data);
+
   render(data);
 });
 
@@ -25,82 +31,103 @@ function render(data) {
     .domain(data.map((_, i) => i))
     .range([0, width]);
 
-  const maxAnomaly = d3.max(data, (d) => Math.abs(d.anomaly));
+  console.log(xScale.bandwidth());
+  console.log(xScale.domain().length);
 
-  // let's contruct a color scale for the rectangles, divergent (blue to red, white in the middle)
-  const colorScale = d3.scaleDiverging(
-    [maxAnomaly, 0, -maxAnomaly],
-    // d3.interpolateRdBu
-    d3.interpolatePiYG
-  );
+  //rects:
+  // data.forEach((d, i) => {
+  //   svg
+  //     .append("rect")
+  //     .attr("x", xScale(i))
+  //     .attr("y", 0)
+  //     .attr("width", xScale.bandwidth())
+  //     .attr("fill", "white")
+  //     .attr("height", height)
+  //     .attr("stroke", "black");
+  // });
 
-  // let's iterate data and drawing full heigh rectangles:
-  const rectGroup = svg.append("g");
-  data.forEach((d, i) => {
-    const rect = rectGroup
-      .append("rect")
-      .attr("x", xScale(i))
-      .attr("y", 0)
-      .attr("width", xScale.bandwidth())
-      .attr("fill", "white")
-      .attr("height", height);
+  //diverging color schemes:
+  //https://d3js.org/d3-scale-chromatic/diverging
+  //https://d3js.org/d3-scale/diverging
 
-    rect
-      .transition()
-      .duration(1000)
-      .delay(20 * i)
-      .attr("fill", colorScale(d.anomaly));
+  // console.log(d3.extent(data, (d) => d.anomaly));
 
-    const offset = 30;
+  // const maxAnomaly = d3.max(data, (d) => Math.abs(d.anomaly));
 
-    //   add a mouseover to transition the rect 10 pixels up and add a text showing the year and anomaly
-    rect.on("mouseover", (event) => {
-      rect.transition().duration(250).attr("y", -offset);
+  // // let's contruct a color scale for the rectangles, divergent (blue to red, white in the middle)
+  // const colorScale = d3.scaleDiverging(
+  //   [maxAnomaly, 0, -maxAnomaly],
+  //   // d3.interpolateRdBu
+  //   d3.interpolatePiYG
+  // );
 
-      rect.attr("stroke", "black").attr("stroke-width", 1).raise();
+  // // let's iterate data and drawing full heigh rectangles:
+  // const rectGroup = svg.append("g");
+  // data.forEach((d, i) => {
+  //   const rect = rectGroup
+  //     .append("rect")
+  //     .attr("x", xScale(i))
+  //     .attr("y", 0)
+  //     .attr("width", xScale.bandwidth())
+  //     .attr("fill", "white")
+  //     // .attr("fill", colorScale(d.anomaly))
+  //     .attr("height", height);
 
-      const tooltipGroup = svg
-        .append("g")
-        .attr("class", "tooltip")
-        .attr(
-          "transform",
-          `translate(${xScale(i) + xScale.bandwidth() + 4}, ${-offset})`
-        )
-        .style("pointer-events", "none")
-        .style("font-size", "11px")
-        .style("font-family", "sans-serif")
-        .style("dominant-baseline", "hanging");
+  //   rect
+  //     .transition()
+  //     .duration(1000)
+  //     .delay(20 * i)
+  //     .attr("fill", colorScale(d.anomaly));
 
-      tooltipGroup
-        .style("opacity", 0)
-        .transition()
-        .duration(250)
-        .style("opacity", 1);
+  //   const offset = 30;
 
-      tooltipGroup.append("text").text(`${d.year}.`);
+  //   //   add a mouseover to transition the rect 10 pixels up and add a text showing the year and anomaly
+  //   rect.on("mouseover", () => {
+  //     // rect.transition().duration(250).attr("y", -offset);
+  //     rect.attr("stroke", "black").attr("stroke-width", 1).raise();
 
-      tooltipGroup
-        .append("text")
-        .attr("dy", 12)
-        .text(`${d.anomaly.toFixed(2)}°C`);
-    });
+  //     const tooltipGroup = svg
+  //       .append("g")
+  //       .attr("class", "tooltip")
+  //       .attr(
+  //         "transform",
+  //         `translate(${xScale(i) + xScale.bandwidth() + 4}, ${-offset})`
+  //       )
+  //       .style("pointer-events", "none")
+  //       .style("font-size", "11px")
+  //       .style("font-family", "sans-serif")
+  //       .style("dominant-baseline", "hanging");
 
-    // add a mouseout to transition the rect back to its original position and remove the text
-    rect.on("mouseout", function (event) {
-      d3.select(this).transition().attr("y", 0).attr("stroke", "none");
-      svg.selectAll("g.tooltip").remove();
-    });
-  });
+  //     tooltipGroup
+  //       .style("opacity", 0)
+  //       .transition()
+  //       .duration(250)
+  //       .style("opacity", 1);
 
-  //   let's add x axis to the bottom:
-  const xAxis = d3
-    .axisBottom(xScale)
-    .tickValues(xScale.domain().filter((d, i) => i % 20 === 0))
-    .tickFormat((i) => data[i].year);
+  //     tooltipGroup.append("text").text(`${d.year}.`);
 
-  svg
-    .append("g")
-    .attr("transform", `translate(0, ${height})`)
-    .call(xAxis)
-    .call((g) => g.selectAll(".domain").remove());
+  //     tooltipGroup
+  //       .append("text")
+  //       .attr("dy", 12)
+  //       .text(`${d.anomaly.toFixed(2)}°C`);
+  //   });
+
+  //   // add a mouseout to transition the rect back to its original position and remove the text
+  //   rect.on("mouseout", function (event) {
+  //     d3.select(this).transition().attr("y", 0).attr("stroke", "none");
+  //     svg.selectAll("g.tooltip").remove();
+  //   });
+  // });
+
+  // //   let's add x axis to the bottom:
+  // const xAxis = d3
+  //   .axisBottom(xScale)
+  //   // .tickValues(xScale.domain().filter((d, i) => i % 20 === 0))
+  //   // .tickFormat((i) => data[i].year);
+
+  // svg
+  //   .append("g")
+  //   .attr("transform", `translate(0, ${height})`)
+  //   .call(xAxis)
+  //   // .call((g) => g.selectAll(".domain").remove());
 }
