@@ -33,12 +33,19 @@
       //   debugger;
 
       // ======== //
-      //   loopListItems(data);
+      loopListItems(data);
       //   svgIntro();
-      render();
+      // render();
 
       function loopListItems(data) {
+        //max loops 5:
+        var i = 0;
+
         d3.interval(() => {
+          i++;
+          if (i > 5) {
+            return;
+          }
           var dataCopy = data.slice();
           dataCopy.splice(Math.floor(Math.random() * dataCopy.length), 1);
 
@@ -48,25 +55,48 @@
             .data(dataCopy, (d) => d)
             .exit()
             .transition()
-            .duration(1000)
+            .duration(2000)
             .style("color", "white")
+            .style("font-size", "0px")
             .on("end", function () {
               d3.select(this).remove();
             });
 
-          d3.select("ul")
+          const litems = d3
+            .select("ul")
             .selectAll("li")
             .data(dataCopy, (d) => d)
             .enter()
             .append("li")
+            .style("font-size", "0px")
             .text((d) => d)
             //   make it flash to green
-            .style("color", "green")
+            .style("color", "green");
+
+          litems
             .transition()
-            .delay(1000)
-            .duration(1000)
+            .delay(2000)
+            .duration(2000)
+            .style("font-size", "26px")
             .style("color", "black");
-        }, 3000);
+
+          //on doubleclick remove the element
+          litems.on("dblclick", function () {
+            d3.select(this)
+              .transition()
+              .duration(2000)
+              .style("font-size", "0px")
+              .on("end", function (d, data) {
+                console.log("clicked on: ", d);
+
+                d3.select(this).remove();
+                let indexOf = dataCopy.indexOf(d);
+                dataCopy.splice(indexOf, 1);
+
+                console.log("after removal: ", dataCopy);
+              });
+          });
+        }, 5000);
       }
 
       function svgIntro() {
