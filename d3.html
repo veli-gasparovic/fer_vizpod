@@ -6,37 +6,35 @@
       //SELECTION
       const title = d3.select("h1");
 
-      //   console.log(title);
-      //   debugger;
-      //   .transition().duration(2000).style("color", "red");
+      console.log(title);
+      debugger;
+      // .transition().duration(2000).style("color", "red");
 
-      //MODIFICATION
-      // title.style("color", "green");
+      // MODIFICATION
+      title.style("color", "green").style("cursor", "pointer");
 
-      //TRANSITION
-      // title.transition().duration(2000).style("color", "red");
+      // TRANSITION
+      title.transition().duration(2000).style("color", "red");
 
-      //INTERACTIVITY
-      // title.on("click", function () {
-      //   //on click change to a random color from the d3 tableau10 color scheme
-      //   d3.select(this)
-      //     .transition()
-      //     .style("color", d3.schemeTableau10[Math.floor(Math.random() * 10)]);
+      // INTERACTIVITY
+      title.on("click", function () {
+        //on click change to a random color from the d3 tableau10 color scheme
+        d3.select(this)
+          .transition()
+          .style("color", d3.schemeTableau10[Math.floor(Math.random() * 10)]);
+      });
 
-      //   //change cursor to pointer CSS style
-      // });
-
-      // d3.select("body").append("ul");
+      d3.select("body").append("ul");
 
       //DATA
-      // var data = d3.range(10);
-      // console.log(data);
+      var data = d3.range(10);
+      console.log(data);
       //   debugger;
 
-      // ======== //
+      // INTRO TO BASIC D3 FUNCTIONS, UNCOMMENT EACH FUNCTION TO TEST:
       // loopListItems(data);
-      //   svgIntro();
-      // render();
+      // svgIntro();
+      render();
 
       function loopListItems(data) {
         //max loops 5:
