@@ -16,14 +16,14 @@ const snowflake = svg
 const generateSnowflakeGroup = (numArms, size) => {
   const snowflake = svg.append("g");
 
+  // Add central circle
+  snowflake
+    .append("circle")
+    .attr("r", size / 2)
+    .attr("fill", "white");
+
   for (let i = 0; i < numArms; i++) {
     const rotation = (i * 360) / numArms;
-
-    // Add central circle
-    snowflake
-      .append("circle")
-      .attr("r", size / 2)
-      .attr("fill", "white");
 
     // Main line
     snowflake
@@ -31,7 +31,7 @@ const generateSnowflakeGroup = (numArms, size) => {
       .attr("x1", 0)
       .attr("y1", 0)
       .attr("x2", 0)
-      .attr("y2", -size)
+      .attr("y2", -size * 2)
       .attr("transform", `rotate(${rotation})`)
       .attr("stroke", "white")
       .attr("stroke-width", 2);
@@ -40,7 +40,7 @@ const generateSnowflakeGroup = (numArms, size) => {
   return snowflake;
 };
 
-let FLAKES = 200;
+let FLAKES = 100;
 
 function createSnowflake(x, y) {
   const size = Math.random() * 10;
@@ -51,20 +51,23 @@ function createSnowflake(x, y) {
     .attr("fill", "white");
 
   // Add a random rotation and transition towards the ground
-  snowflake
-    .transition()
-    // .delay(Math.random() * 10000)
-    .duration(Math.random() * 10000 + 5000)
-    .attr("transform", `translate(${x}, ${height}))`)
-    .attr(
-      "transform",
-      `translate(${x}, ${height}) scale(${size / 10}) rotate(${
-        Math.random() * 360
-      })`
-    )
-    .on("end", () => {
-      snowflake.transition().duration(250).style("opacity", 0).remove();
-    });
+
+  if (true) {
+    snowflake
+      .transition()
+      .duration(Math.random() * 10000 + 5000)
+      .delay(Math.random() * 3000)
+      .attr("transform", `translate(${x}, ${height}))`)
+      .attr(
+        "transform",
+        `translate(${x}, ${height}) scale(${size / 10}) rotate(${
+          Math.random() * 360
+        })`
+      )
+      .on("end", () => {
+        snowflake.transition().duration(250).style("opacity", 0).remove();
+      });
+  }
 }
 
 for (let i = 0; i < FLAKES; i++) {
@@ -72,13 +75,16 @@ for (let i = 0; i < FLAKES; i++) {
   const y = Math.random() * height;
   createSnowflake(x, y);
 }
-svg.on("mousemove", function (event) {
-  const [currentX, currentY] = d3.pointer(event);
-  const numNewFlakes = 3; // Fixed number of flakes per move
 
-  for (let i = 0; i < numNewFlakes; i++) {
-    const offsetX = Math.random() * 40 - 20; // Random offset ±20px
-    const offsetY = Math.random() * 40 - 20;
-    createSnowflake(currentX + offsetX, currentY + offsetY);
-  }
-});
+if (true) {
+  svg.on("mousemove", function (event) {
+    const [currentX, currentY] = d3.pointer(event);
+    const numNewFlakes = 3; // Fixed number of flakes per move
+
+    for (let i = 0; i < numNewFlakes; i++) {
+      const offsetX = Math.random() * 40 - 20; // Random offset ±20px
+      const offsetY = Math.random() * 40 - 20;
+      createSnowflake(currentX + offsetX, currentY + offsetY);
+    }
+  });
+}
