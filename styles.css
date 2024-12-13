@@ -20,6 +20,10 @@
   justify-content: center;
 }
 
+.hero {
+  height: 100%;
+}
+
 .center {
   height: 50%;
   background-color: #e9ecef;
