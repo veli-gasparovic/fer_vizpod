@@ -54,7 +54,7 @@ for (let i = 0; i < 10; i++) {
 
   starGroup
     .append("path")
-    .attr("d", createStarPath(50, 5))
+    .attr("d", createStarPath(50, 5 + i))
     .attr("transform", `translate(${x}, ${y})`)
     .attr("fill", "none")
     .attr("stroke", "white")
@@ -77,20 +77,25 @@ const zoom = d3.zoom().on("zoom", (event) => {
 // svg.style('overflow', 'hidden');
 svg.call(zoom);
 
-// let's add a click handler on the stars that will execute a transition
-// it will rotate them and drop them to the bottom of the screen and then remove them
-starGroup.selectAll("path").on("click", function () {
-  //calculate the "x" of the star so it can drop vertically
-  const x = d3.select(this).attr("transform").split(",")[0].split("(")[1];
+if (false) {
+  starGroup.selectAll("path").on("click", function () {
+    //get the star x position
+    const x = parseFloat(
+      d3.select(this).attr("transform").split(",")[0].split("(")[1]
+    );
 
-  d3.select(this)
-    .transition()
-    .duration(2000)
-    .attr("transform", `translate(${x}, ${height}) rotate(180)`)
-    .on("end", function () {
-      d3.select(this).transition().duration(250).style("opacity", 0).remove();
-    });
-});
+    //get
 
-// need to add fill to all stars so that the click event works
-starGroup.selectAll("path");
+    d3.select(this)
+      .transition()
+      .duration(2000)
+      .attr("fill", "yellow")
+      .attr("fill-opacity", 1)
+      .attr("stroke", "yellow")
+      .ease(d3.easeBounceOut)
+      .attr("transform", `translate(${x}, ${height - centerY}) rotate(180)`) // drop to the bottom
+      .on("end", function () {
+        d3.select(this).transition().duration(250).style("opacity", 0).remove();
+      });
+  });
+}
