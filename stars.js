@@ -10,7 +10,7 @@ function createStarPath(radius, points = 5) {
 
   // Generate the path using d3.line
   const curve = d3.curveLinearClosed;
-  //   const curve = d3.curveBasisClosed;
+  // const curve = d3.curveBasisClosed;
   const lineGenerator = d3.line().curve(curve);
 
   const coordinates = [];
@@ -66,25 +66,25 @@ for (let i = 0; i < 10; i++) {
 
 //   dodajem zoom i pan:
 const zoom = d3.zoom().on("zoom", (event) => {
+  console.log(event.transform);
   zoomGroup.attr("transform", event.transform);
 
   //   let's make the stroke smaller as we zoom in
   //   console.log(event.transform.k);
-  //   const newStrokeWidth = 2 / event.transform.k;
-  //   starGroup.selectAll("path").attr("stroke-width", newStrokeWidth);
+  const newStrokeWidth = 2 / event.transform.k;
+  starGroup.selectAll("path").attr("stroke-width", newStrokeWidth);
 });
 
 // svg.style('overflow', 'hidden');
 svg.call(zoom);
 
-if (false) {
+if (true) {
   starGroup.selectAll("path").on("click", function () {
+    console.log(d3.select(this).attr("transform"));
     //get the star x position
     const x = parseFloat(
       d3.select(this).attr("transform").split(",")[0].split("(")[1]
     );
-
-    //get
 
     d3.select(this)
       .transition()

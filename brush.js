@@ -124,6 +124,8 @@ if (false) {
     // get the selection
     const selection = event.selection;
 
+    // console.log(selection);
+
     starGroup.selectAll("path").classed("selected", false);
 
     //   get the selected stars and fill them with yellow
@@ -146,7 +148,7 @@ if (false) {
   brushSvg.call(brush);
 }
 
-if (false) {
+if (true) {
   // create a brush to select stars
   const brush = d3.brush().on("start brush end", (event) => {
     if (!event.selection) return;
