@@ -1,283 +1,251 @@
 <html>
-  <body>
-    <h1>Hello World!</h1>
-    <script src="https://d3js.org/d3.v7.min.js"></script>
-    <script>
-      //SELECTION
-      const title = d3.select("h1");
 
-      console.log(title);
-      debugger;
-      // .transition().duration(2000).style("color", "red");
+<body>
+  <h1>Hello World!</h1>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script>
+    //SELECTION
+    const title = d3.select("h1");
 
-      // MODIFICATION
-      title.style("color", "green").style("cursor", "pointer");
+    // MODIFICATION
+    // title.style("color", "green").style("cursor", "pointer");
 
-      // TRANSITION
-      title.transition().duration(2000).style("color", "red");
+    // TRANSITION
+    // title.transition().duration(5000).style("color", "red");
 
-      // INTERACTIVITY
-      title.on("click", function () {
-        //on click change to a random color from the d3 tableau10 color scheme
-        d3.select(this)
-          .transition()
-          .style("color", d3.schemeTableau10[Math.floor(Math.random() * 10)]);
-      });
+    // INTERACTIVITY
+    // title.on("click", function () {
+    //   //on click change to a random color from the d3 tableau10 color scheme
+    //   d3.select(this)
+    //     .transition()
+    //     .style("color", d3.schemeTableau10[Math.floor(Math.random() * 10)]);
+    // });
 
-      d3.select("body").append("ul");
+    // d3.select("body").append("ul");
 
-      //DATA
-      var data = d3.range(10);
-      console.log(data);
-      //   debugger;
+    // //DATA
+    // var data = d3.shuffle(d3.range(10));
+    // console.log(data);
+    // debugger;
 
-      // INTRO TO BASIC D3 FUNCTIONS, UNCOMMENT EACH FUNCTION TO TEST:
-      // loopListItems(data);
-      // svgIntro();
-      render();
 
-      function loopListItems(data) {
-        //max loops 5:
-        var i = 0;
+    // INTRO TO BASIC D3 FUNCTIONS, UNCOMMENT EACH FUNCTION TO TEST:
+    // createBulletedList(data);
+    // svgIntro();
+    // render();
 
-        d3.interval(() => {
-          i++;
-          if (i > 5) {
-            return;
-          }
-          var dataCopy = data.slice();
-          dataCopy.splice(Math.floor(Math.random() * dataCopy.length), 1);
+    function createBulletedList(data) {
 
-          console.log(dataCopy);
+      const litems = d3
+        .select("ul")
+        .selectAll("li")
+        .data(data, (d) => d)
+        .enter()
+        .append("li")
+        .text((d, i) => `${i}: broj ${d}`)
+      // .style("color", "green")
+      // .style("font-size", "20px");
 
-          d3.selectAll("li")
-            .data(dataCopy, (d) => d)
-            .exit()
-            .transition()
-            .duration(2000)
-            .style("color", "white")
-            .style("font-size", "0px")
-            .on("end", function () {
-              d3.select(this).remove();
-            });
+      // litems.on("click", function () {
+      //   d3.select(this).remove();
+      //   // d3.select(this)
+      //   //   .transition()
+      //   //   .duration(2000)
+      //   //   .style("font-size", "0px")
+      //   //   .on("end", () =>
+      //   //     d3.select(this).remove()
+      //   //   );
+      // });
 
-          const litems = d3
-            .select("ul")
-            .selectAll("li")
-            .data(dataCopy, (d) => d)
-            .enter()
-            .append("li")
-            .style("font-size", "0px")
-            .text((d) => d)
-            //   make it flash to green
-            .style("color", "green");
+    }
 
-          litems
-            .transition()
-            .delay(2000)
-            .duration(2000)
-            .style("font-size", "26px")
-            .style("color", "black");
+    function svgIntro() {
+      // let's append a 300 x 300 svg element to the body
+      var svg = d3
+        .select("body")
+        .append("svg")
+        .attr("width", 600)
+        .attr("height", 600)
+        .style("border", "1px solid black");
 
-          //on doubleclick remove the element
-          litems.on("dblclick", function () {
-            d3.select(this)
-              .transition()
-              .duration(2000)
-              .style("font-size", "0px")
-              .on("end", function (d, data) {
-                console.log("clicked on: ", d);
+      // // let's append a circle to the svg element
+      // svg
+      //   .append("circle")
+      //   .attr("cx", 300)
+      //   .attr("cy", 300)
+      //   .attr("r", 100)
+      //   .style("fill", "#ba012d");
 
-                d3.select(this).remove();
-                let indexOf = dataCopy.indexOf(d);
-                dataCopy.splice(indexOf, 1);
+      // let circleData = d3.range(10);
 
-                console.log("after removal: ", dataCopy);
-              });
-          });
-        }, 5000);
-      }
+      // //using the data array, let's append blue circles
+      // svg
+      //   .selectAll("circle.blue")
+      //   .data(circleData, (d) => d)
+      //   .enter()
+      //   .append("circle")
+      //   .attr("class", "blue")
+      //   .attr("cx", (d) => d * 50 + 50)
+      //   .attr("cy", (d) => d * 50 + 50)
+      //   .attr("r", (d, i) => i * 4)
+      //   .style("fill", "blue");
 
-      function svgIntro() {
-        // let's append a 300 x 300 svg element to the body
-        var svg = d3
-          .select("body")
-          .append("svg")
-          .attr("width", 600)
-          .attr("height", 600)
-          .style("border", "1px solid black");
+      // //remove a random element from the data
+      // circleData.splice(Math.floor(Math.random() * circleData.length), 1);
 
-        // let's append a circle to the svg element
-        svg
-          .append("circle")
-          .attr("cx", 300)
-          .attr("cy", 300)
-          .attr("r", 100)
-          .style("fill", "#ba012d");
+      // svg
+      //   .selectAll("circle.blue")
+      //   .data(circleData, (d) => d)
+      //   .exit()
+      //   .style("fill", "black")
+      //   .transition()
+      //   .duration(2000)
+      //   .style("opacity", 0)
+      //   .on("end", function () {
+      //     d3.select(this).remove();
+      //   });
 
-        let circleData = d3.range(10);
+      // //let's add basic mouse event interactivity on circles
+      // svg.selectAll("circle.blue").on("mouseover", function () {
+      //   d3.select(this)
+      //     .style("fill", "yellow")
+      //     .style("stroke", "black")
+      //     .style("stroke-width", 2);
 
-        //using the data array, let's append blue circles
-        svg
-          .selectAll("circle.blue")
-          .data(circleData, (d) => d)
-          .enter()
-          .append("circle")
-          .attr("class", "blue")
-          .attr("cx", (d) => d * 50 + 50)
-          .attr("cy", (d) => d * 50 + 50)
-          .attr("r", (d) => 10 + d)
-          .style("fill", "blue");
+      //   console.log("hoveram datapoint", d3.select(this).data());
+      // });
 
-        //remove a random element from the data
-        circleData.splice(Math.floor(Math.random() * data.length), 1);
+      // svg.selectAll("circle.blue").on("mouseout", function () {
+      //   d3.select(this).style("fill", "blue").style("stroke", "none");
+      // });
 
-        svg
-          .selectAll("circle.blue")
-          .data(circleData, (d) => d)
-          .exit()
-          .transition()
-          .duration(2000)
-          .style("opacity", 0)
-          .on("end", function () {
-            d3.select(this).remove();
-          });
+      // //   let's create x scale and axis
+      // var xScale = d3.scaleLinear().domain([0, 10]).range([0, 600]);
+      // var xAxis = d3.axisBottom(xScale);
 
-        //let's add basic mouse event interactivity on circles
-        svg.selectAll("circle.blue").on("mouseover", function () {
-          d3.select(this)
-            .style("fill", "yellow")
-            .style("stroke", "black")
-            .style("stroke-width", 2);
+      // var yScale = d3.scaleLinear().domain([0, 10]).range([600, 0]);
+      // var yAxis = d3.axisLeft(yScale);
 
-          console.log("hoveram datapoint", d3.select(this).data());
+      // svg
+      //   .append("g")
+      //   .call(xAxis)
+      //   .attr("class", "x-axis")
+      //   .attr("transform", "translate(0, 600)");
+      // svg
+      //   .append("g")
+      //   .call(yAxis)
+      //   .attr("class", "y-axis")
+      //   .attr("transform", "translate(0, 0)");
+
+      // svg.style("overflow", "visible");
+      // svg.style("margin-left", "100px");
+    }
+
+    function render() {
+      var svg = d3
+        .select("body")
+        .append("svg")
+        .attr("width", 600)
+        .attr("height", 600)
+        .style("border", "1px solid black");
+
+      //   let's create x scale and axis
+      var xScale = d3.scaleLinear().domain([0, 10]).range([0, 600]);
+      var xAxis = d3.axisBottom(xScale);
+
+      var yScale = d3.scaleLinear().domain([0, 10]).range([600, 0]);
+      var yAxis = d3.axisLeft(yScale);
+
+      svg
+        .append("g")
+        .call(xAxis)
+        .attr("class", "x-axis")
+        .attr("transform", "translate(0, 600)");
+      svg
+        .append("g")
+        .call(yAxis)
+        .attr("class", "y-axis")
+        .attr("transform", "translate(0, 0)");
+
+      svg.style("overflow", "visible");
+      svg.style("margin-left", "100px");
+
+      //generate a 10 point data array, each having x and y values between 0 and 10
+      var scatterData = [];
+      for (var i = 0; i < 11; i++) {
+        scatterData.push({
+          x: i,
+          y: Math.random() * 10,
         });
-
-        svg.selectAll("circle.blue").on("mouseout", function () {
-          d3.select(this).style("fill", "blue").style("stroke", "none");
-        });
-
-        //   let's create x scale and axis
-        var xScale = d3.scaleLinear().domain([0, 10]).range([0, 600]);
-        var xAxis = d3.axisBottom(xScale);
-
-        var yScale = d3.scaleLinear().domain([0, 10]).range([600, 0]);
-        var yAxis = d3.axisLeft(yScale);
-
-        svg
-          .append("g")
-          .call(xAxis)
-          .attr("class", "x-axis")
-          .attr("transform", "translate(0, 600)");
-        svg
-          .append("g")
-          .call(yAxis)
-          .attr("class", "y-axis")
-          .attr("transform", "translate(0, 0)");
-
-        svg.style("overflow", "visible");
-        svg.style("margin-left", "100px");
       }
 
-      function render() {
-        var svg = d3
-          .select("body")
-          .append("svg")
-          .attr("width", 600)
-          .attr("height", 600)
-          .style("border", "1px solid black");
+      console.log(scatterData);
 
-        //   let's create x scale and axis
-        var xScale = d3.scaleLinear().domain([0, 10]).range([0, 600]);
-        var xAxis = d3.axisBottom(xScale);
+      // //append circles to the svg element
+      // svg
+      //   .append("g")
+      //   .attr("class", "scatter-group")
+      //   .selectAll("circle.scatter")
+      //   .data(scatterData, (d) => d)
+      //   .enter()
+      //   .append("circle")
+      //   .attr("class", "scatter")
+      //   .attr("cx", (d) => xScale(d.x))
+      //   .attr("cy", (d) => yScale(d.y))
+      //   .attr("r", 6)
+      //   .attr("fill", "#bcbddc")
+      //   .attr("stroke", "black")
+      //   .attr("stroke-width", 2);
 
-        var yScale = d3.scaleLinear().domain([0, 10]).range([600, 0]);
-        var yAxis = d3.axisLeft(yScale);
+      // //RESCALE:
+      // //lets rescale y to be between 0 and 100 and transition the circles and scale
+      // yScale.domain([0, 50]);
+      // svg
+      //   .selectAll("circle.scatter")
+      //   .transition()
+      //   .duration(2000)
+      //   .attr("cy", (d) => yScale(d.y));
 
-        svg
-          .append("g")
-          .call(xAxis)
-          .attr("class", "x-axis")
-          .attr("transform", "translate(0, 600)");
-        svg
-          .append("g")
-          .call(yAxis)
-          .attr("class", "y-axis")
-          .attr("transform", "translate(0, 0)");
+      // // transition the yAxis
+      // svg.select(".y-axis").transition().duration(2000).call(yAxis);
 
-        svg.style("overflow", "visible");
-        svg.style("margin-left", "100px");
+      // //after 3000ms call addLine(svg, scatterData);
+      // setTimeout(() => {
+      //   const g = svg.append("g").attr("opacity", 0);
 
-        //generate a 10 point data array, each having x and y values between 0 and 10
-        var scatterData = [];
-        for (var i = 0; i < 11; i++) {
-          scatterData.push({
-            x: i,
-            y: Math.random() * 10,
-          });
-        }
-        //append circles to the svg element
-        svg
-          .append("g")
-          .attr("class", "scatter-group")
-          .selectAll("circle.scatter")
-          .data(scatterData, (d) => d)
-          .enter()
-          .append("circle")
-          .attr("class", "scatter")
-          .attr("cx", (d) => xScale(d.x))
-          .attr("cy", (d) => yScale(d.y))
-          .attr("r", 6)
-          .attr("fill", "#bcbddc")
-          .attr("stroke", "black")
-          .attr("stroke-width", 2);
-        //RESCALE:
-        //lets rescale y to be between 0 and 100 and transition the circles and scale
-        yScale.domain([0, 50]);
-        svg
-          .selectAll("circle.scatter")
-          .transition()
-          .duration(2000)
-          .attr("cy", (d) => yScale(d.y));
+      //   const line = d3
+      //     .line()
+      //     .x((d) => xScale(d.x))
+      //     .y((d) => yScale(d.y))
 
-        // transition the yAxis
-        svg.select(".y-axis").transition().duration(2000).call(yAxis);
+      //     // .curve(d3.curveMonotoneX);
+      //   //https://www.d3indepth.com/examples-merged/shapes/curve-explorer/
 
-        //after 3000ms call addLine(svg, scatterData);
-        setTimeout(() => {
-          const g = svg.append("g").attr("opacity", 0);
+      //   g.append("path")
+      //     .datum(scatterData)
+      //     .attr("d", line)
+      //     .attr("fill", "none")
+      //     .attr("stroke", "black")
+      //     .attr("stroke-width", 4)
+      //     .attr("stroke-opacity", 0.5);
 
-          const line = d3
-            .line()
-            .x((d) => xScale(d.x))
-            .y((d) => yScale(d.y))
-            .curve(d3.curveMonotoneX);
-          //https://www.d3indepth.com/examples-merged/shapes/curve-explorer/
+      //   // const area = d3
+      //   //   .area()
+      //   //   .x((d) => xScale(d.x))
+      //   //   .y0((d) => yScale(0))
+      //   //   .y1((d) => yScale(d.y))
+      //   //   .curve(d3.curveMonotoneX);
 
-          g.append("path")
-            .datum(scatterData)
-            .attr("d", line)
-            .attr("fill", "none")
-            .attr("stroke", "black")
-            .attr("stroke-width", 4)
-            .attr("stroke-opacity", 0.5);
+      //   // g.append("path")
+      //   //   .datum(scatterData)
+      //   //   .attr("d", area)
+      //   //   .attr("fill", "#e34a33");
 
-          const area = d3
-            .area()
-            .x((d) => xScale(d.x))
-            .y0((d) => yScale(0))
-            .y1((d) => yScale(d.y))
-            .curve(d3.curveMonotoneX);
+      //   g.transition().duration(2000).attr("opacity", 1);
+      //   svg.select(".scatter-group").raise();
+      // }, 3000);
+    }
+  </script>
+</body>
 
-          g.append("path")
-            .datum(scatterData)
-            .attr("d", area)
-            .attr("fill", "#e34a33");
-
-          g.transition().duration(2000).attr("opacity", 1);
-          svg.select(".scatter-group").raise();
-        }, 3000);
-      }
-    </script>
-  </body>
 </html>
