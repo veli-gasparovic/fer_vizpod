@@ -12,6 +12,7 @@ const svg = d3
   .append("svg")
   .attr("width", width)
   .attr("height", height)
+  .style("overflow", "visible")
   .attr("viewBox", `0 0 ${width} ${height}`);
 
 const tooltip = (() => {
@@ -35,13 +36,9 @@ const tooltip = (() => {
   return element;
 })();
 
-d3.promiseAll = function (...promises) {
-  return Promise.all(promises);
-};
-
-d3.promiseAll(
-  d3.json("hrvatska.topo.json"),
-  d3.csv("stanovnistvo_povrsina.csv", d3.autoType)
+Promise.all(
+  [d3.json("hrvatska.topo.json"),
+  d3.csv("stanovnistvo_povrsina.csv", d3.autoType)]
 )
   .then(([topology, populationRows]) => {
     const geojson = topojson.feature(topology, topology.objects.hrvatska);
@@ -77,7 +74,7 @@ d3.promiseAll(
       .attr("stroke", "#888")
       .attr("stroke-width", 0.5)
       .on("mouseover", function (event, d) {
-        d3.select(this).attr("stroke-width", 2).attr("stroke", "#333");
+        d3.select(this).attr("stroke-width", 2).attr("stroke", "#333").raise();
 
         if (!d?.properties) return;
 
@@ -110,7 +107,7 @@ d3.promiseAll(
         tooltip.style.top = `${event.pageY + offset}px`;
       })
       .on("mouseout", function () {
-        d3.select(this).attr("stroke-width", 0.5).attr("stroke", "#888");
+        d3.select(this).attr("stroke-width", 0.5).attr("stroke", "#888").lower();        
         tooltip.style.display = "none";
       });
 
