@@ -9,13 +9,30 @@
   let height = 0;
 
   // Normalized domain [0, 100] mapped to pixels
-  const xScale = d3.scaleLinear().domain([0, 100]);
-  const yScale = d3.scaleLinear().domain([0, 100]);
+  const xScale = d3.scaleLinear().domain([0, 100]).clamp(true);
+  const yScale = d3.scaleLinear().domain([0, 100]).clamp(true);
 
   let currentPoints = [];
-
-  // Local clamp helper to avoid relying on d3.clamp availability
-  const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
+  
+  const deletePointByTimestamp = (timestamp) => {
+    // Optimistic remove by timestamp
+    const next = currentPoints.filter((d) => d.timestamp !== timestamp);
+    render(next);
+    fetch(`${ENDPOINT_POST}?timestamp=${timestamp}`, {
+      method: 'DELETE'
+    })
+      .then(async (res) => {
+        try {
+          const data = await res.json();
+          console.log('DELETE response:', data);
+        } catch (e) {
+          console.log('DELETE response (non-JSON or empty body)');
+        }
+      })
+      .catch(() => {
+        console.error('Error deleting point');
+      });
+  };
 
   function resize() {
     const node = svg.node();
@@ -27,8 +44,7 @@
     xScale.range([0, width]);
     yScale.range([0, height]);
 
-    // Re-position existing points after resize
-    render(currentPoints, { transition: false });
+    render(currentPoints);
   }
 
   window.addEventListener('resize', resize);
@@ -38,63 +54,68 @@
   // Click handler: map pixels -> [0,100] (rounded integers) and POST
   svg.on('click', (event) => {
     const [px, py] = d3.pointer(event, svg.node());
-    const xn = Math.round(clamp(xScale.invert(px), 0, 100));
-    const yn = Math.round(clamp(yScale.invert(py), 0, 100));
+    const xn = Math.round(xScale.invert(px), 0, 100);
+    const yn = Math.round(yScale.invert(py), 0, 100);
+    const ts = Date.now();
+
+    // Optimistic add with timestamp identity
+    const newPoint = { x: xn, y: yn, timestamp: ts };
+    render([...currentPoints, newPoint]);
 
     fetch(ENDPOINT_POST, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ points: [xn, yn] })
+      body: JSON.stringify({ timestamp: ts, x: xn, y: yn })
     }).catch(() => {
-      // best-effort; ignore errors for now
+      console.error('Error posting points');
     });
   });
 
-  function render(points, opts = { transition: true }) {
+  function render(points) {
     currentPoints = Array.isArray(points) ? points : [];
-    const t = opts.transition ? svg.transition().duration(300) : null;
+    // Cancel any ongoing transitions to avoid mid-state freezes on re-render
+    g.selectAll('circle.point').interrupt();
+    const t = svg.transition().duration(300);
 
     const circles = g.selectAll('circle.point')
-      .data(currentPoints, (d) => `${d[0]},${d[1]}`);
+      .data(currentPoints, (d) => d.timestamp);
+
+    const RADIUS = 16;
 
     const circlesEnter = circles.enter()
       .append('circle')
       .attr('class', 'point')
-      .attr('cx', (d) => xScale(d[0]))
-      .attr('cy', (d) => yScale(d[1]))
+      .attr('cx', (d) => xScale(d.x))
+      .attr('cy', (d) => yScale(d.y))
       .attr('r', 0)
-      .attr('opacity', 0);
+      .attr('opacity', 0)
+      .on('click', (event, d) => {
+        event.stopPropagation();
+        deletePointByTimestamp(d.timestamp);
+      });
 
-    if (t) {
-      circlesEnter.transition(t)
-        .attr('r', 6)
-        .attr('opacity', 1);
-    } else {
-      circlesEnter
-        .attr('r', 6)
-        .attr('opacity', 1);
-    }
+    circlesEnter.transition(t)
+      .attr('r', RADIUS)
+      .attr('opacity', 1);
 
     const circlesUpdate = circles.merge(circlesEnter);
-    if (t) {
-      circlesUpdate.transition(t)
-        .attr('cx', (d) => xScale(d[0]))
-        .attr('cy', (d) => yScale(d[1]));
-    } else {
-      circlesUpdate
-        .attr('cx', (d) => xScale(d[0]))
-        .attr('cy', (d) => yScale(d[1]));
-    }
+    circlesUpdate.transition(t)
+        .attr('cx', (d) => xScale(d.x))
+        .attr('cy', (d) => yScale(d.y))
+        // Reassert final visual state on updates so interrupted enters finish
+        .attr('r', RADIUS)
+        .attr('opacity', 1)
+        .selection()
+        .on('click', (event, d) => {
+          event.stopPropagation();
+          deletePointByTimestamp(d.timestamp);
+        });
 
-    if (t) {
-      circles.exit()
+    circles.exit()
         .transition(t)
         .attr('r', 0)
         .attr('opacity', 0)
         .remove();
-    } else {
-      circles.exit().remove();
-    }
   }
 
   // WebSocket with simple exponential backoff reconnect
@@ -117,9 +138,10 @@
     ws.onmessage = (evt) => {
       try {
         const msg = JSON.parse(evt.data);
-        // Expect [[x,y], [x,y], ...] normalized to [0,100]
+        // Expect [{x, y, timestamp}, ...] normalized to [0,100]
         if (Array.isArray(msg)) {
-          render(msg, { transition: true });
+          const valid = msg.filter((d) => d && typeof d.x === 'number' && typeof d.y === 'number' && typeof d.timestamp === 'number');
+          render(valid);
         }
       } catch (_) {
         // ignore malformed
