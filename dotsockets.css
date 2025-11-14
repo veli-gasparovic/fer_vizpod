@@ -1,0 +1,23 @@
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: #f5efe6; /* light beige */
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+}
+
+#viz {
+  width: 100vw;
+  height: 100vh;
+  display: block; /* remove inline gap */
+}
+
+circle.point {
+  fill: steelblue;
+  stroke: rgba(0,0,0,0.15);
+  stroke-width: 1px;
+}
+
+
