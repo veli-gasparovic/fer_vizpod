@@ -48,36 +48,41 @@ const starGroup = zoomGroup
   .attr("transform", `translate(${centerX}, ${centerY})`);
 
 // let's add 10 stars
-for (let i = 0; i < 10; i++) {
-  const x = Math.random() * width - centerX;
-  const y = Math.random() * height - centerY;
 
-  starGroup
-    .append("path")
-    .attr("d", createStarPath(50, 5 + i))
-    .attr("transform", `translate(${x}, ${y})`)
-    .attr("fill", "none")
-    .attr("stroke", "white")
-    .attr("stroke-width", 2)
-    .attr("fill", "white")
-    .attr("fill-opacity", 0.2)
-    .style("cursor", "pointer");
-}
+const randomLocations = d3.range(0, 10).map((d) => {
+  return {
+    x: Math.random() * width - centerX,
+    y: Math.random() * height - centerY,
+  };
+});
+
+starGroup
+  .selectAll("path")
+  .data(randomLocations)
+  .enter()
+  .append("path")
+  .attr("d", (d, i) => createStarPath(50, 5 + i))
+  .attr("transform", (d) => `translate(${d.x}, ${d.y})`)
+  .attr("fill", "none")
+  .attr("stroke", "white")
+  .attr("stroke-width", 2)
+  .attr("fill", "white")
+  .attr("fill-opacity", 0.4)
+  .style("cursor", "pointer");
 
 //   dodajem zoom i pan:
 const zoom = d3.zoom().on("zoom", (event) => {
   console.log(event.transform);
   zoomGroup.attr("transform", event.transform);
 
-  //   let's make the stroke smaller as we zoom in
-  //   console.log(event.transform.k);
-  const newStrokeWidth = 2 / event.transform.k;
-  starGroup.selectAll("path").attr("stroke-width", newStrokeWidth);
+  // const newStrokeWidth = 2 / event.transform.k;
+  // starGroup.selectAll("path").attr("stroke-width", newStrokeWidth);
 });
 
 // svg.style('overflow', 'hidden');
 svg.call(zoom);
 
+//point and click
 if (true) {
   starGroup.selectAll("path").on("click", function () {
     console.log(d3.select(this).attr("transform"));

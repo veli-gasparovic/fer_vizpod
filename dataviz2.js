@@ -76,7 +76,7 @@ for (let i = 0; i < FLAKES; i++) {
   createSnowflake(x, y);
 }
 
-if (true) {
+if (false) {
   svg.on("mousemove", function (event) {
     const [currentX, currentY] = d3.pointer(event);
     const numNewFlakes = 3; // Fixed number of flakes per move
