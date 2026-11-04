@@ -38,7 +38,7 @@ to the scripted version and tells you so. ↺ reset in the editor bar also disca
 
 - [ ] Host `lecture/` somewhere public for the students' phones, e.g. Cloudflare Pages:
       `npx wrangler pages deploy . --project-name vizpod-lecture` from this folder.
-      Present from the hosted URL and the on-screen join address (`…/join.html`) is filled in
+      Present from the hosted URL and the on-screen join address (`…/join`) is filled in
       automatically. From `file://` it falls back to `joinUrl` in `js/config.js`.
 - [ ] Check the worker is up: open `join.html` yourself, tap, then delete your dot.
 - [ ] Clear old dots with the "clear all" button on the "Where are you?" slide (it asks twice).

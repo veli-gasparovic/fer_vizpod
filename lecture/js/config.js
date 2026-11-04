@@ -21,5 +21,5 @@ window.LECTURE = {
 };
 
 if (/^https?:$/.test(location.protocol)) {
-  LECTURE.dotsockets.joinUrl = location.host + location.pathname.replace(/[^/]*$/, "") + "join.html";
+  LECTURE.dotsockets.joinUrl = location.host + location.pathname.replace(/[^/]*$/, "") + "join";
 }
