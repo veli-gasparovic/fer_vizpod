@@ -52,7 +52,7 @@
 </section>
 
 <!-- 3 -->
-<section class="slide" id="three-things" data-block="1" data-minutes="3" data-title="Three things a picture can't do">
+<section class="slide" id="three-things" data-block="1" data-minutes="2" data-title="Three things a picture can't do">
   <div class="slide-inner">
     <header class="slide-head">
       <div class="kicker">Why · the limits of raster images</div>
@@ -79,40 +79,49 @@
     <blockquote class="pull f" data-step="4">In 2010, three things happened in the same six weeks: Jobs killed Flash on iOS (29 Apr), Marcotte named responsive design (25 May), and the iPhone 4 shipped a 2× screen (June). The "one image fits all" chart died that summer.</blockquote>
   </div>
   <aside class="notes">
-    <p><b>3 min.</b> Three reasons, one per step. Keep it brisk; the timeline comes next.</p>
+    <p><b>2 min.</b> Three reasons, one per step. Keep it brisk; the timeline comes next.</p>
     <p>Mobile/desktop numbers: StatCounter press release, 1 Nov 2016 (51.3% vs 48.7%). The Jan 2009 figure (desktop 99.3%) is from Visual Capitalist, using StatCounter data.</p>
     <p>Caveat if asked: screen-reader support for SVG varies by browser/AT combination; it needs explicit ARIA.</p>
   </aside>
 </section>
 
 <!-- 4 -->
-<section class="slide" id="lineage" data-block="1" data-minutes="2" data-title="Interactivity: from mantra to newsroom">
+<section class="slide" id="lineage" data-block="1" data-minutes="4" data-title="Interactivity: from mantra to newsroom">
   <div class="slide-inner">
     <header class="slide-head">
       <div class="kicker">Why · readers want to explore</div>
       <h2>From a mantra to the front page</h2>
     </header>
-    <div class="cols-4 grow" style="align-items:start">
+    <div class="cols-4 grow lin-cards">
       <div class="card f" data-step="1"><div class="date">1996</div><h3>Shneiderman</h3>
-        <p class="small">"The Eyes Have It": a task-by-data-type taxonomy. Overview, zoom, filter, details-on-demand, plus <i>relate, history, extract</i>.</p></div>
+        <div class="widget lin-card-demo" data-widget="lin-mantra" data-opt='{"at":1}'></div>
+        <p class="small">"The Eyes Have It": a task-by-data-type taxonomy. Overview, zoom, filter, details-on-demand, plus <i>relate, history, extract</i>.</p>
+        <p class="lin-card-link"><a href="https://www.cs.umd.edu/~ben/papers/Shneiderman1996eyes.pdf">the paper (PDF)</a></p></div>
       <div class="card f" data-step="2"><div class="date">2007</div><h3>Heer &amp; Robertson</h3>
-        <p class="small">"Animated Transitions in Statistical Data Graphics". In two controlled experiments, animated transitions <b>"can significantly improve graphical perception."</b></p>
-        <p class="small muted">That result is why D3 has transitions and key functions.</p></div>
+        <div class="widget lin-card-demo" data-widget="lin-anim" data-opt='{"at":2}'></div>
+        <p class="small">"Animated Transitions in Statistical Data Graphics": in two controlled experiments, animated transitions <b>"can significantly improve graphical perception."</b> <span class="muted">That's why D3 has transitions and key functions.</span></p>
+        <p class="lin-card-link"><a href="https://idl.uw.edu/papers/animated-transitions">the paper</a></p></div>
       <div class="card f" data-step="3"><div class="date">10 Mar 2011</div><h3>Bret Victor</h3>
-        <p class="small">"Explorable Explanations": <i>"An active reader doesn't passively sponge up information, but uses the author's argument as a springboard for critical thought."</i></p>
-        <p class="small muted">Published one month after D3's release.</p></div>
+        <div class="widget lin-card-demo" data-widget="lin-reactive" data-opt='{"at":3}'></div>
+        <p class="small">"Explorable Explanations": <i>"An active reader doesn't passively sponge up information, but uses the author's argument as a springboard for critical thought."</i> <span class="muted">One month after D3's release.</span></p>
+        <p class="lin-card-link"><a href="https://worrydream.com/ExplorableExplanations/">the essay</a></p></div>
       <div class="card f" data-step="4"><div class="date">2 Nov 2012</div><h3>512 Paths to the White House</h3>
-        <p class="small">NYT, by Mike Bostock and Shan Carter. d3js.org still cites it as the showcase for the data join. Bostock calls it his favourite graphic from that era.</p></div>
+        <div class="widget lin-card-demo" data-widget="lin-paths" data-opt='{"at":4}'></div>
+        <p class="small">NYT, by Mike Bostock and Shan Carter: 9 swing states, won or lost, give 2⁹ = 512 paths. d3js.org still cites it as the showcase for the data join.</p>
+        <p class="lin-card-link"><a href="https://archive.nytimes.com/www.nytimes.com/interactive/2012/11/02/us/politics/paths-to-the-white-house.html">the original (NYT)</a></p></div>
     </div>
   </div>
   <aside class="notes">
-    <p><b>2 min.</b> Four dates that explain why "interactive" isn't a gimmick. Shneiderman says what readers need. Heer &amp; Robertson give empirical proof that animation helps. Victor names the genre. The NYT puts it on a front page.</p>
-    <p>Optional: open <a href="https://archive.nytimes.com/www.nytimes.com/interactive/2012/11/02/us/politics/paths-to-the-white-house.html">512 Paths</a> in a tab (needs network).</p>
+    <p><b>4 min.</b> Four dates that explain why "interactive" isn't a gimmick. Let them <i>feel</i> each one for 30–40 s before you name it.</p>
+    <p><b>1 Shneiderman:</b> drag the box over the stripes (zoom), hover a bar (details). "Overview first" is the stripes; the full version is slide 24.</p>
+    <p><b>2 Heer &amp; Robertson:</b> it autoplays. Ask "where did the red bar go?" Left is hopeless, right is easy. That's their experiment in 3 seconds, and it's why D3 has transitions and keys (slide 19 does it with real data).</p>
+    <p><b>3 Bret Victor:</b> drag 1961 to 1850, then to 1990: the same year goes from "very warm" to "barely warm", and the stripes recolour. A sentence you can argue with. The whole deck is meant to be this.</p>
+    <p><b>4 512 Paths:</b> starts at Obama 431 of 512 paths. Click FL once (Obama): 255 of 256, game over. Click FL again (Romney): Obama still wins 176 of 256. Click OH twice (Romney too): 60 vs 64, a coin toss. That was the NYT's point: Romney needed nearly everything. Each branch is a data element, so fixing a state is enter/exit. 2012 electoral votes; safe states 237–191.</p>
   </aside>
 </section>
 
 <!-- 5 -->
-<section class="slide" id="timeline" data-block="1" data-minutes="4" data-title="Every plugin died. The standards didn't.">
+<section class="slide" id="timeline" data-block="1" data-minutes="3" data-title="Every plugin died. The standards didn't.">
   <div class="slide-inner">
     <header class="slide-head">
       <div class="kicker">Why · browser technology and standards</div>
@@ -121,7 +130,7 @@
     <div class="widget grow" data-widget="timeline"></div>
   </div>
   <aside class="notes">
-    <p><b>4 min.</b> This timeline is itself a D3 chart. Hover any event for details-on-demand; press <kbd>X</kbd> to show its bound data.</p>
+    <p><b>3 min.</b> This timeline is itself a D3 chart. Hover any event for details-on-demand; press <kbd>X</kbd> to show its bound data.</p>
     <ul>
       <li><b>Step 1, standards on paper:</b> SVG 1.0 is a W3C Recommendation in Sep 2001, but browsers lag. IE had VML; others needed the Adobe SVG Viewer plugin.</li>
       <li><b>Step 2, the plugin era:</b> prefuse (Java, 2005), Flare (Flash, Oct 2007). Interactive, but closed runtimes.</li>
@@ -595,6 +604,7 @@ Explain every scale domain you choose.</pre>
 <!-- widgets -->
 <script src="js/widgets/hero-stripes.js"></script>
 <script src="js/widgets/raster-vector.js"></script>
+<script src="js/widgets/lineage.js"></script>
 <script src="js/widgets/timeline.js"></script>
 <script src="js/widgets/fig3.js"></script>
 <script src="js/widgets/toolbox.js"></script>

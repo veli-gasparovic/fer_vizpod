@@ -416,3 +416,6 @@ ul.clean.small { font-size: 0.8rem; gap: 0.6rem; }
   font-variant-ligatures: none !important; font-feature-settings: "liga" 0, "calt" 0 !important;
 }
 .cs-root > svg { width: 100%; height: 100%; }
+/* slide 4: cards with a mini demo each */
+.lin-cards > .card { align-self: stretch; }
+.lin-cards { align-content: stretch !important; }
