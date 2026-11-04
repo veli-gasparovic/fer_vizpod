@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#f7f5f0" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#121211" media="(prefers-color-scheme: dark)" />
+  <title>Where are you? · VizPod</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #f7f5f0; --surface: #fcfcfb; --ink: #141413; --ink-2: #52514e; --muted: #8a887f; --rule: #dcd8cc;
+      --accent: #b2182b; --accent-2: #2166ac; --enter: #1baf7a;
+      --serif: "Iowan Old Style", Charter, Georgia, serif;
+      --sans: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root { --bg: #121211; --surface: #1a1a19; --ink: #f0efec; --ink-2: #c3c2b7; --muted: #8f8d84; --rule: #34332f; --accent: #e66767; --accent-2: #5598e7; --enter: #199e70; }
+    }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html, body { margin: 0; height: 100%; background: var(--bg); color: var(--ink); font-family: var(--sans); }
+    body { display: flex; flex-direction: column; min-height: 100svh; padding: max(14px, env(safe-area-inset-top)) 16px max(14px, env(safe-area-inset-bottom)); gap: 10px; }
+    .kicker { font: 600 11px/1 var(--sans); letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); }
+    h1 { font: 600 26px/1.1 var(--serif); margin: 4px 0 2px; letter-spacing: -0.01em; }
+    p.hint { margin: 0; font-size: 14px; line-height: 1.4; color: var(--ink-2); }
+    .chart { position: relative; width: 100%; flex: 1 1 auto; min-height: 280px; }
+    .chart svg { position: absolute; inset: 0; width: 100%; height: 100%; touch-action: manipulation; user-select: none; -webkit-user-select: none; }
+    .frame { fill: var(--surface); stroke: var(--rule); }
+    .mid { stroke: var(--rule); stroke-dasharray: 3 4; }
+    .quad { font: italic 12px var(--serif); fill: var(--muted); }
+    .axis-label { font: 600 12px var(--sans); fill: var(--ink-2); }
+    .tick-label { font: 11px var(--sans); fill: var(--muted); }
+    circle.pt { fill: var(--accent-2); fill-opacity: 0.35; stroke: var(--ink); stroke-opacity: 0.4; stroke-width: 1; }
+    circle.pt.mine { fill: var(--accent); fill-opacity: 0.9; stroke: var(--surface); stroke-opacity: 1; stroke-width: 3; }
+    .ring { fill: none; stroke: var(--accent); stroke-width: 2; pointer-events: none; }
+    .status { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--ink-2); }
+    .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--muted); }
+    .dot.connected { background: var(--enter); }
+    .dot.connecting { background: #eda100; }
+    .status .me { margin-left: auto; }
+    .status button { font: inherit; font-size: 13px; padding: 8px 14px; border-radius: 999px; border: 1px solid var(--rule); background: var(--surface); color: var(--ink); }
+  </style>
+</head>
+<body>
+  <div>
+    <div class="kicker">VizPod · live</div>
+    <h1>Where are you?</h1>
+    <p class="hint">Tap the chart to place <b>your</b> dot. Tap again somewhere else to move it, or tap your dot to remove it.</p>
+  </div>
+  <div class="chart"><svg aria-label="Audience poll: JavaScript experience versus data-viz experience"></svg></div>
+  <div class="status"><span class="dot"></span><span class="label">connecting…</span><span class="me"></span></div>
+
+  <script src="vendor/d3.v7.9.0.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/widgets/dotsockets.js"></script>
+  <script>
+  (function () {
+    const client = window.DotSocketsClient;
+    const KEY = "vizpod-my-dots";
+    const mine = new Set(JSON.parse(localStorage.getItem(KEY) || "[]"));
+    const save = () => localStorage.setItem(KEY, JSON.stringify([...mine]));
+
+    const box = document.querySelector(".chart");
+    const svg = d3.select(box).select("svg");
+    const frame = svg.append("g"), dots = svg.append("g");
+    const x = d3.scaleLinear().domain([0, 100]).clamp(true);
+    const y = d3.scaleLinear().domain([0, 100]).clamp(true); // top-down, same as the deck
+    let S = 0, ox = 0, oy = 0, points = [], status = "offline";
+
+    function layout() {
+      const W = box.clientWidth, H = box.clientHeight;
+      const padL = 26, padB = 30;
+      S = Math.max(120, Math.min(W - padL - 2, H - padB - 2));
+      ox = padL + (W - padL - S) / 2; oy = Math.min(8, (H - padB - S) / 2);
+      svg.attr("viewBox", `0 0 ${W} ${H}`);
+      x.range([ox, ox + S]); y.range([oy, oy + S]);
+      frame.selectAll("*").remove();
+      frame.append("rect").attr("class", "frame").attr("x", ox).attr("y", oy).attr("width", S).attr("height", S).attr("rx", 8);
+      frame.append("line").attr("class", "mid").attr("x1", x(50)).attr("x2", x(50)).attr("y1", oy).attr("y2", oy + S);
+      frame.append("line").attr("class", "mid").attr("y1", y(50)).attr("y2", y(50)).attr("x1", ox).attr("x2", ox + S);
+      frame.selectAll("text.quad").data([
+        [25, 10, "data-viz yes,", "JS not yet"], [75, 10, "ready to", "teach this"],
+        [25, 88, "welcome —", "start here"], [75, 88, "JS dev, new", "to dataviz"],
+      ]).join("text").attr("class", "quad").attr("text-anchor", "middle").attr("x", (d) => x(d[0])).attr("y", (d) => y(d[1]))
+        .call((t) => t.append("tspan").text((d) => d[2]))
+        .call((t) => t.append("tspan").attr("x", (d) => x(d[0])).attr("dy", 15).text((d) => d[3]));
+      const by = oy + S + 20;
+      frame.append("text").attr("class", "axis-label").attr("x", ox + S / 2).attr("y", by).attr("text-anchor", "middle").text("JavaScript experience →");
+      frame.append("text").attr("class", "tick-label").attr("x", ox).attr("y", by).text("none");
+      frame.append("text").attr("class", "tick-label").attr("x", ox + S).attr("y", by).attr("text-anchor", "end").text("pro");
+      frame.append("text").attr("class", "axis-label").attr("transform", `translate(${ox - 10},${oy + S / 2}) rotate(-90)`).attr("text-anchor", "middle").text("Data-viz experience →");
+      frame.append("text").attr("class", "tick-label").attr("transform", `translate(${ox - 10},${oy + S}) rotate(-90)`).text("none");
+      frame.append("text").attr("class", "tick-label").attr("transform", `translate(${ox - 10},${oy}) rotate(-90)`).attr("text-anchor", "end").text("pro");
+      render(false);
+    }
+
+    function render(animate = true) {
+      if (!S) return;
+      const t = svg.transition().duration(animate ? 300 : 0);
+      // forget my dots that no longer exist on the server (only once we've heard from it)
+      if (status === "connected") { const live = new Set(points.map((d) => d.timestamp)); [...mine].forEach((ts) => { if (!live.has(ts) && Date.now() - ts > 8000) mine.delete(ts); }); save(); }
+      const sorted = points.slice().sort((a, b) => mine.has(a.timestamp) - mine.has(b.timestamp)); // mine on top
+      dots.selectAll("circle.pt").data(sorted, (d) => d.timestamp)
+        .join(
+          (en) => en.append("circle").attr("class", "pt").attr("cx", (d) => x(d.x)).attr("cy", (d) => y(d.y)).attr("r", 0)
+            .call((s) => s.transition(t).attr("r", (d) => (mine.has(d.timestamp) ? 14 : 9))),
+          (up) => up.call((s) => s.transition(t).attr("cx", (d) => x(d.x)).attr("cy", (d) => y(d.y)).attr("r", (d) => (mine.has(d.timestamp) ? 14 : 9))),
+          (ex) => ex.call((s) => s.transition(t).attr("r", 0).remove())
+        )
+        .classed("mine", (d) => mine.has(d.timestamp))
+        .order();
+      document.querySelector(".dot").className = "dot " + status;
+      document.querySelector(".label").textContent =
+        status === "connected" ? `${points.length} ${points.length === 1 ? "dot" : "dots"} · live` : status === "connecting" ? "connecting…" : "offline, retrying…";
+      document.querySelector(".me").textContent = [...mine].length ? "your dot is red" : "";
+    }
+
+    svg.on("click", (event) => {
+      const [px, py] = d3.pointer(event, svg.node());
+      // hit-test generously (fingers are big): within 22px of one of my dots → remove it
+      const hit = points.find((d) => mine.has(d.timestamp) && Math.hypot(x(d.x) - px, y(d.y) - py) < 22);
+      if (hit) { mine.delete(hit.timestamp); save(); client.remove(hit.timestamp); return; }
+      if (px < ox || px > ox + S || py < oy || py > oy + S) return;
+      // one person, one dot: placing a new one moves the old one
+      [...mine].forEach((ts) => { mine.delete(ts); client.remove(ts); });
+      const p = client.add(x.invert(px), y.invert(py));
+      mine.add(p.timestamp); save();
+      render();
+    });
+
+    client.subscribe((p, s) => { points = p; status = s; render(true); });
+    window.addEventListener("resize", layout);
+    layout();
+  })();
+  </script>
+</body>
+</html>
