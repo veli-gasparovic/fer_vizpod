@@ -14,7 +14,7 @@ window.LECTURE = {
     // The page students open on their phones (lecture/join.html), shown big on screen.
     // When the deck is served over http(s) (Cloudflare Pages, GitHub Pages, ...) this is
     // worked out from the deck's own URL below; this value is only used from file://.
-    joinUrl: "veli-gasparovic.github.io/fer_vizpod/lecture/join.html",
+    joinUrl: "fer-vizpod.pages.dev/lecture/join",
   },
 
   breakMinutes: 15,
