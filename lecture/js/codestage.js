@@ -180,6 +180,7 @@
           if (k === "error") line.className = "err";
           line.textContent = a.map(fmt).join(" ");
           consoleBox.appendChild(line); consoleBox.classList.add("show");
+          while (consoleBox.childElementCount > 50) consoleBox.firstElementChild.remove();
           consoleBox.scrollTop = consoleBox.scrollHeight;
         };
       });
