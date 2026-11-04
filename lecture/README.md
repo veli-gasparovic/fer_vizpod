@@ -28,6 +28,11 @@ the existing dotsockets worker and degrade to an offline state without it.
 | Ctrl + Enter | run the code in a live-code editor (you can type freely) |
 | Esc | leave the editor so the arrow keys move slides again |
 
+Slides with steps show a step navigator bottom right (‹ 1 2 3 4 ›, plus what the next step is),
+and code slides also have ‹ › in the editor bar. Clicking a button or slider inside a slide hands
+the keyboard back to the deck, so → / Space keep working; only the code editor keeps the keys
+(the navigator then says "Esc to leave").
+
 The URL hash tracks the position (`#21.3` = slide 21, step 3), so a reload keeps your place.
 
 Live coding: type in any editor and press Ctrl+Enter. If you then press →, the deck tries to

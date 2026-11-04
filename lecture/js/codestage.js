@@ -97,7 +97,9 @@
           <div class="cs-bar"><span class="file">${esc(def.file || "script.js")}</span>
             <button data-act="run" title="Ctrl+Enter">▶ run</button>
             <button data-act="reset" title="discard edits">↺ reset</button>
-            <span class="step-label"></span></div>
+            <span class="step-label"></span>
+            <button data-act="prev" class="cs-step" title="previous step (←)" aria-label="previous step">‹</button>
+            <button data-act="next" class="cs-step" title="next step: uncomment the next block (→ / Space)" aria-label="next step">›</button></div>
           <div class="cs-scroll"><div class="cs-code"><pre></pre><textarea spellcheck="false" autocapitalize="off" autocomplete="off"></textarea></div></div>
           <div class="cs-error"></div>
         </div>
@@ -258,10 +260,13 @@
         }
       });
       el.querySelector('[data-act="run"]').onclick = run;
+      el.querySelector('[data-act="prev"]').onclick = () => Deck.prev();
+      el.querySelector('[data-act="next"]').onclick = () => Deck.next();
       el.querySelector('[data-act="reset"]').onclick = () => { dirty = false; renderStructured(step, null); run(); };
 
       const api = {
         step: (s, info) => setStep(s, info),
+        label: (s) => { const c = def.chunks.find((c) => (c.at || 0) === s && s > 0 && c.label); return c ? c.label : ""; },
         asyncError: (e) => { if (activeStage === api) showError(e); },
         enter: () => { activeStage = api; },
         leave: () => { cleanup(); if (activeStage === api) activeStage = null; },

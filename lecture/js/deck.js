@@ -224,6 +224,12 @@
     body.insertAdjacentHTML("beforeend", `
       <div class="progress"></div>
       <div class="counter"></div>
+      <nav class="stepnav" aria-label="steps on this slide">
+        <span class="sn-hint"></span>
+        <button class="sn-arrow" data-d="-1" aria-label="previous step">‹</button>
+        <span class="sn-dots"></span>
+        <button class="sn-arrow sn-next" data-d="1" aria-label="next step">›</button>
+      </nav>
       <div class="xray-badge">X-RAY · hover any mark</div>
       <div class="xray-box"></div><div class="xray-panel"></div>
       <div class="toast"></div>
@@ -247,11 +253,51 @@
     setupXray();
   }
 
+  // Label for a step, if a widget on the slide knows one (code stages name their chunks).
+  function stepLabel(s, n) {
+    for (const w of s.instances) {
+      if (!w.inst.label) continue;
+      let l = null; safe(() => { l = w.inst.label(n - w.offset); });
+      if (l) return l;
+    }
+    return "";
+  }
+
+  let navSlide = -1;
+  function updateStepNav() {
+    const s = Deck.slides[Deck.index], nav = document.querySelector(".stepnav");
+    if (!nav) return;
+    nav.classList.toggle("show", s.steps > 0);
+    if (!s.steps) return;
+    const dots = nav.querySelector(".sn-dots");
+    if (navSlide !== Deck.index) {
+      navSlide = Deck.index;
+      dots.innerHTML = d3.range(1, s.steps + 1).map((k) => {
+        const l = stepLabel(s, k);
+        return `<button class="sn-dot" data-s="${k}" title="step ${k}${l ? ": " + l : ""}" aria-label="step ${k}">${k}</button>`;
+      }).join("");
+      // a gentle nudge that there is more on this slide
+      if (Deck.step === 0) { nav.classList.remove("nudge"); void nav.offsetWidth; nav.classList.add("nudge"); }
+    }
+    dots.querySelectorAll(".sn-dot").forEach((d) => {
+      const k = +d.dataset.s;
+      d.classList.toggle("done", k <= Deck.step);
+      d.classList.toggle("current", k === Deck.step);
+    });
+    const editing = document.body.classList.contains("editing");
+    const last = Deck.step >= s.steps;
+    const nl = last ? "" : stepLabel(s, Deck.step + 1);
+    nav.querySelector(".sn-hint").innerHTML = editing
+      ? `editing · <kbd>Esc</kbd> to leave, then <kbd>→</kbd>`
+      : last ? (Deck.index < Deck.slides.length - 1 ? "next slide" : "") : `next${nl ? ": " + nl.replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c])) : ` step ${Deck.step + 1}/${s.steps}`}`;
+    nav.querySelector('[data-d="-1"]').disabled = Deck.step === 0;
+  }
+
   function updateChrome() {
     progressCells.forEach((c, i) => c.classList.toggle("future", i > Deck.index));
-    const s = Deck.slides[Deck.index];
+    updateStepNav();
     document.querySelector(".counter").innerHTML =
-      `<b>${Deck.index + 1}</b>/${Deck.slides.length}` + (s.steps ? ` · ${Deck.step}/${s.steps}` : "");
+      `<b>${Deck.index + 1}</b>/${Deck.slides.length}`;
     document.querySelectorAll(".menu li").forEach((li) => li.classList.toggle("current", +li.dataset.i === Deck.index));
   }
 
@@ -262,7 +308,7 @@
       <h3>${b ? (b === "break" ? "Break" : "Block " + b) : ""} · ${d3.sum(ss, (s) => s.minutes)} min</h3>
       <ol>${ss.map((s) => `<li data-i="${s.i}"><span class="n">${s.i + 1}</span>${s.title}<span class="m">${s.minutes ? s.minutes + "′" : ""}</span></li>`).join("")}</ol>`).join("") +
       `<div class="keys">
-        <span><kbd>→</kbd>/<kbd>Space</kbd> next step</span><span><kbd>←</kbd> back</span>
+        <span><kbd>→</kbd>/<kbd>Space</kbd> next step (or the <kbd>›</kbd> bottom right)</span><span><kbd>←</kbd> back</span>
         <span><kbd>Shift</kbd>+<kbd>→</kbd> next slide</span><span><kbd>G</kbd> this menu</span>
         <span><kbd>P</kbd> presenter window</span><span><kbd>X</kbd> X-ray</span><span><kbd>T</kbd> light/dark</span>
         <span><kbd>F</kbd> fullscreen</span><span><kbd>B</kbd> blackout</span>
@@ -276,9 +322,31 @@
 
   // -------------------------------------------------------------- keyboard
   function bindKeys() {
+    const nav = document.querySelector(".stepnav");
+    nav.addEventListener("click", (e) => {
+      const b = e.target.closest("button");
+      if (!b) return;
+      if (b.dataset.d === "1") next();
+      else if (b.dataset.d === "-1") prev();
+      else if (b.dataset.s) go(Deck.index, +b.dataset.s);
+    });
+    // After clicking a button or a slider in a slide, hand the keyboard back to the deck,
+    // so Space / arrows move steps instead of pressing that button again.
+    document.addEventListener("click", (e) => {
+      const b = e.target.closest && e.target.closest("button, a, input[type=range], input[type=checkbox], input[type=radio], select");
+      if (b && b.tagName !== "SELECT") requestAnimationFrame(() => b.blur());
+    });
+    document.addEventListener("change", (e) => {
+      if (e.target.matches && e.target.matches("select, input[type=range], input[type=checkbox], input[type=radio]")) e.target.blur();
+    });
+    const isText = (t) => t && (t.tagName === "TEXTAREA" || t.isContentEditable ||
+      (t.tagName === "INPUT" && !/^(range|checkbox|radio|button|submit|reset|color)$/i.test(t.type)));
+    document.addEventListener("focusin", (e) => { if (isText(e.target)) { document.body.classList.add("editing"); updateStepNav(); } });
+    document.addEventListener("focusout", (e) => { if (isText(e.target)) { document.body.classList.remove("editing"); updateStepNav(); } });
+
     document.addEventListener("keydown", (e) => {
       const t = e.target;
-      const typing = t && (t.tagName === "TEXTAREA" || t.tagName === "INPUT" || t.tagName === "SELECT" || t.isContentEditable);
+      const typing = isText(t) || (t && t.tagName === "SELECT");
       if (typing) {
         if (e.key === "Escape") t.blur();
         // clickers send PageDown/PageUp — honour them even while editing
