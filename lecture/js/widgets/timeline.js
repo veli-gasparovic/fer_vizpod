@@ -160,11 +160,11 @@
         // a generous invisible hit target
         evg.append("rect").attr("x", (d) => d.cx - 8).attr("y", (d) => d.ly - f * 0.7).attr("width", (d) => d.label.length * f * 0.32 + 16)
           .attr("height", (d) => d.cy - d.ly + f * 0.7 + 8).attr("fill", "transparent");
-        evg.on("pointerenter", function (ev, d) {
-          if (+this.style.opacity === 0 || d.g > step) return;
+        evg.style("cursor", "help").on("pointerenter", function (ev, d) {
+          d3.select(this).select("circle").attr("r", 7);
           tip.show(`<b>${d.date}</b> · ${d.label}<br><span style="white-space:normal;display:block;max-width:22rem;opacity:.85">${d.desc}</span>`, ev);
         }).on("pointermove", (ev) => tip.el.style.display === "block" && tip.show(tip.el.innerHTML, ev))
-          .on("pointerleave", () => tip.hide());
+          .on("pointerleave", function () { d3.select(this).select("circle").attr("r", 4.5); tip.hide(); });
 
         // 2011 "now ready" marker for step 5
         const now = svg.append("g").attr("class", "now").attr("opacity", 0);
