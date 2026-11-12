@@ -290,7 +290,7 @@
   </div>
   <aside class="notes">
     <p><b>4 min.</b> Drag the domain handles (top), the range handles (bottom) and the value. The readout shows the function call. Steps walk through linear → inverted range (SVG's y-axis points down) → log → band → colour (range doesn't have to be pixels).</p>
-    <p>An axis is just "a scale, drawn". The visualization literacy point: whoever controls the domain controls the story. We come back to that in the AI review.</p>
+    <p>An axis is just "a scale, drawn". The visualization literacy point: whoever controls the domain controls the story.</p>
   </aside>
 </section>
 
@@ -476,68 +476,19 @@
 </section>
 
 <!-- 26 -->
-<section class="slide" id="ai" data-block="2" data-minutes="2" data-title="D3 in the age of AI">
+<section class="slide" id="takeaways" data-block="2" data-minutes="1" data-title="Three takeaways">
   <div class="slide-inner">
-    <header class="slide-head"><div class="kicker">AI · the evidence so far (2024–25)</div><h2>AI changes the economics of syntax, not of concepts</h2></header>
-    <div class="cols-2 grow">
-      <div class="col">
-        <ul class="clean">
-          <li class="f" data-step="1"><b>Observable (Kosara, Apr 2025):</b> Claude writes "perfectly reasonable, well-structured JavaScript code calling D3 functions", but a simple line chart took "around 300 lines", and the model reached for D3 7.8.5 instead of 7.9.0. There's "a clear danger in using code without fully understanding it."</li>
-          <li class="f" data-step="2"><b>Scott Logic (Mar 2024):</b> LLMs called <code>d3.nest()</code>, removed in v6. The code only worked against v5.</li>
-          <li class="f" data-step="2"><b>A student study (arXiv 2405.00748, n = 26):</b> ChatGPT "encouraged exploration of new capabilities of SVG and D3."</li>
-          <li class="f" data-step="3"><b>Fun fact:</b> the <code>d3.js</code> in this very repo is v7.8.2. Version drift isn't only an AI problem.</li>
-        </ul>
-      </div>
-      <div class="col f" data-step="3" style="justify-content:center">
-        <h3>A prompt that works</h3>
-        <pre class="prompt">no react. Single HTML file, D3 v7.9.0 from a CDN.
-D3 v7 only: use selection.join, no deprecated APIs
-(no d3.nest, no d3.scale.linear, no d3.event).
-Key every data join. Start bar scales at zero.
-Explain every scale domain you choose.</pre>
-        <p class="small muted">"I start most of my prompts with 'no react'" — Simon Willison, Oct 2024.</p>
-      </div>
-    </div>
-  </div>
-  <aside class="notes">
-    <p><b>2 min.</b> Sources are thin and early: Observable is an interested party, Scott Logic is a consultancy blog, the arXiv study has n = 26. Re-test any prompt with the current model before class.</p>
-    <p>Bridge: students can generate a bar chart in 30 seconds. Without understanding, they can't (a) tell whether the scale domain lies, (b) debug an exit selection that never removes nodes, (c) spot a v5 API in v7 code, (d) choose stripes vs a line chart for an audience. Next slide: practice exactly that.</p>
-  </aside>
-</section>
-
-<!-- 27 -->
-<section class="slide" id="ai-review" data-block="2" data-minutes="4" data-title="Code review: spot the four bugs">
-  <div class="slide-inner">
-    <header class="slide-head"><div class="kicker">2026 · read code critically</div><h2>The AI wrote it. Find what's wrong before you ship it.</h2></header>
-    <div class="widget grow" data-widget="code" data-script="ai-review"></div>
-  </div>
-  <aside class="notes">
-    <p><b>4 min.</b> "Here's what a model might hand you." Let students shout before each step. Each step fixes one bug:</p>
-    <ol>
-      <li><code>d3.nest()</code> doesn't exist in v7 → <code>d3.rollups</code>.</li>
-      <li>The y domain starts at the minimum, not zero, so the bars lie (Ličko-senjska gets no bar at all).</li>
-      <li>Press <b>top 8 / all</b>: <code>.enter().append()</code> handles only new data, so nothing updates and nothing leaves. → <code>.join()</code>.</li>
-      <li>Press <b>sort A–Z / by size</b>: with no key function the bars morph in place instead of moving → key by county.</li>
-    </ol>
-    <p>Optional: prompt Claude live with "add a brush that shows the mean anomaly" and review the output together.</p>
-  </aside>
-</section>
-
-<!-- 28 -->
-<section class="slide" id="takeaways" data-block="2" data-minutes="1" data-title="Four takeaways">
-  <div class="slide-inner">
-    <header class="slide-head"><div class="kicker">Wrap-up</div><h2>Four things to keep</h2></header>
-    <div class="cols-2 grow takeaways">
+    <header class="slide-head"><div class="kicker">Wrap-up</div><h2>Three things to keep</h2></header>
+    <div class="cols-3 grow takeaways">
       <div class="card f" data-step="1"><div class="big-number">1</div><h3>Visualization = mapping data to visual variables.</h3><p class="small">That mapping is a scale: domain → range.</p></div>
       <div class="card f" data-step="2"><div class="big-number">2</div><h3>The data join = diffing data against the DOM.</h3><p class="small">Enter, update, exit, and a key to keep identity.</p></div>
       <div class="card f" data-step="3"><div class="big-number">3</div><h3>Standards outlive abstractions.</h3><p class="small">Java applets and Flash are gone. SVG, CSS and the DOM are still here.</p></div>
-      <div class="card f" data-step="4"><div class="big-number">4</div><h3>AI writes syntax. You own correctness, honesty and design.</h3><p class="small">Read every domain, every join, every version.</p></div>
     </div>
   </div>
   <aside class="notes"><p><b>1 min.</b></p></aside>
 </section>
 
-<!-- 29 -->
+<!-- 27 -->
 <section class="slide" id="resources" data-block="2" data-minutes="1" data-title="Challenge & resources">
   <div class="slide-inner">
     <header class="slide-head"><div class="kicker">Your turn</div><h2>Challenge: show <i>your</i> stripes</h2></header>
@@ -609,6 +560,5 @@ Explain every scale domain you choose.</pre>
 <script src="js/scripts/stripes-1.js"></script>
 <script src="js/scripts/stripes-2.js"></script>
 <script src="js/scripts/geo.js"></script>
-<script src="js/scripts/ai-review.js"></script>
 </body>
 </html>

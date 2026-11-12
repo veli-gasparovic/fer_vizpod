@@ -48,7 +48,6 @@ to the scripted version and tells you so. ↺ reset in the editor bar also disca
 - [ ] Check the worker is up: open `join.html` yourself, tap, then delete your dot.
 - [ ] Clear old dots: open the presenter window (P), go to the "Where are you?" or break slide, and use "clear all dots…" in its bottom bar (it asks twice). The public deck has no delete button.
 - [ ] Check d3 npm downloads on npmjs.com the day before (the brief's numbers vary by tracker).
-- [ ] Re-test the AI prompt on slide 27 with the current Claude model.
 - [ ] Rehearse with the presenter window (P) on the laptop screen and the deck on the projector.
 
 ## Structure

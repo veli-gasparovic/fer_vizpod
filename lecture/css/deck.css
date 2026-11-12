@@ -358,7 +358,6 @@ pre.prompt {
 .mantra-title span { transition: color 0.3s, background 0.3s; border-radius: 0.2em; padding: 0 0.1em; color: var(--muted); }
 .mantra-title span.lit { color: var(--ink); background: var(--highlight); }
 
-.takeaways { grid-template-rows: 1fr 1fr; }
 .takeaways .big-number { color: var(--accent); font-size: 1.8rem; }
 
 /* helpers used by live-code scripts inside .cs-root */
@@ -395,7 +394,7 @@ ul.clean.small { font-size: 0.8rem; gap: 0.6rem; }
 .cols-2:not(.widget), .cols-3:not(.widget), .cols-4:not(.widget), .split:not(.widget) { align-items: start; }
 .slide-inner > .grow.cols-2, .slide-inner > .grow.cols-3, .slide-inner > .grow.cols-4, .slide-inner > .grow.split { align-content: center; }
 .slide-inner > .grow.split { align-items: center; }
-.takeaways { grid-template-rows: auto auto; }
+.takeaways { align-items: stretch !important; }
 .takeaways .card h3 { font-size: 1.45rem; }
 .takeaways .card p { font-size: 0.9rem; }
 .decide b { font-size: 1rem; }
