@@ -52,7 +52,7 @@
 </section>
 
 <!-- 3 -->
-<section class="slide" id="three-things" data-block="1" data-minutes="2" data-title="Three things a picture can't do">
+<section class="slide" id="three-things" data-block="1" data-minutes="3" data-title="Three things a picture can't do">
   <div class="slide-inner">
     <header class="slide-head">
       <div class="kicker">Why · the limits of raster images</div>
@@ -70,18 +70,22 @@
       <div class="card f" data-step="2">
         <h3>Respond</h3>
         <blockquote class="pull" style="font-size:1rem">Overview first, zoom and filter, then details-on-demand.<cite>Ben Shneiderman, "The Eyes Have It", 1996</cite></blockquote>
-        <p class="small">A PNG gives you the overview and nothing else: no zoom, no filter, no details.</p>
+        <div class="widget card-demo" data-widget="respond-demo"></div>
+        <p class="small">A PNG gives you the overview and nothing else: no zoom, no filter, no details. Switch to PNG and hover: all it knows is a colour.</p>
       </div>
       <div class="card f" data-step="3">
         <h3>Be read by machines</h3>
         <p class="small">In SVG, labels are real <code>&lt;text&gt;</code> nodes. You can select them, Ctrl-F them, index them, style them with CSS (dark mode, print), and expose them to screen readers with <code>role</code>, <code>aria-label</code> and <code>&lt;title&gt;</code>.</p>
+        <div class="widget card-demo machine" data-widget="machine-demo"></div>
         <p class="small muted">Pixels can do none of this. (Screen-reader support for SVG still needs explicit ARIA work.)</p>
       </div>
     </div>
     <blockquote class="pull f" data-step="4">Spring 2010, in under two months: Jobs killed Flash on iOS (29 Apr), Marcotte named responsive design (25 May), and the iPhone 4 shipped a 2× screen (24 Jun). The "one image fits all" chart died that summer.</blockquote>
   </div>
   <aside class="notes">
-    <p><b>2 min.</b> Three reasons, one per step. Keep it brisk; the timeline comes next.</p>
+    <p><b>3 min.</b> Three reasons, one per step, each with a live demo. Keep it brisk; the timeline comes next.</p>
+    <p><b>Respond:</b> drag across 1980–2025 to zoom, hover a year, press "filter: record years" (19 new records after 1850; six since 2000, and 2023 and 2024 back to back). Then switch to PNG and hover: the only thing a picture can tell you is the colour of one pixel.</p>
+    <p><b>Be read by machines:</b> type "split" in the find box: the matching <code>&lt;text&gt;</code> node lights up. The readout lists the text nodes and what a screen reader hears (the <code>aria-label</code>). Switch to PNG: 0 text nodes, nothing to find. Bonus: real Ctrl-F finds "Osijek" in the SVG version, not in the PNG.</p>
     <p>Mobile/desktop numbers: StatCounter Global Stats, "Desktop vs Mobile vs Tablet", worldwide, monthly CSV downloaded 12 Nov 2026. Oct 2016: 51.3% mobile + tablet (their press release of 1 Nov 2016 said the same). Oct 2026: 61.6% (mobile 60.1, tablet 1.6, desktop 38.4). Jan 2009: 0.7%.</p>
     <p>It is not a straight line: the yearly average peaked in 2024 (63%), and 2026 months swung between 51% (Aug) and 62% (Oct). Tablets peaked around 5% in 2016 and are now under 2%; the growth is all phones.</p>
     <p>Caveat if asked: screen-reader support for SVG varies by browser/AT combination; it needs explicit ARIA.</p>
@@ -545,6 +549,7 @@ Explain every scale domain you choose.</pre>
 <script src="js/widgets/raster-vector.js"></script>
 <script src="js/widgets/lineage.js"></script>
 <script src="js/widgets/mobileshare.js"></script>
+<script src="js/widgets/threecards.js"></script>
 <script src="js/widgets/timeline.js"></script>
 <script src="js/widgets/fig3.js"></script>
 <script src="js/widgets/toolbox.js"></script>

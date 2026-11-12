@@ -448,3 +448,5 @@ body.hide-chrome .stepnav, body.presenter .stepnav { display: none !important; }
 .cs-bar .cs-step { font-size: 0.8rem; line-height: 1; width: 1.3rem; height: 1.15rem; padding: 0; display: inline-grid; place-items: center; }
 .cs-bar .cs-step[data-act="prev"] { margin-left: 0.3rem; }
 .scale-spark { height: 7rem; flex: none; }
+.card-demo { height: 8.5rem; flex: none; }
+.card-demo.machine { height: 10.5rem; }
