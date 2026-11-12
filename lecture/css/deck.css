@@ -447,6 +447,8 @@ ul.clean.small { font-size: 0.8rem; gap: 0.6rem; }
 body.hide-chrome .stepnav, body.presenter .stepnav { display: none !important; }
 .cs-bar .cs-step { font-size: 0.8rem; line-height: 1; width: 1.3rem; height: 1.15rem; padding: 0; display: inline-grid; place-items: center; }
 .cs-bar .cs-step[data-act="prev"] { margin-left: 0.3rem; }
-.scale-spark { height: 7rem; flex: none; }
-.card-demo { height: 8.5rem; flex: none; }
-.card-demo.machine { height: 10.5rem; }
+.scale-spark { flex: 1 1 auto; min-height: 7rem; }
+/* slide 3: three cards, equal height (the tallest wins); the demos take up the slack */
+#three-things .cols-3 { align-items: stretch; }
+.card-demo { flex: 1 1 auto; min-height: 8.5rem; }
+.card-demo.machine { min-height: 10.5rem; }
