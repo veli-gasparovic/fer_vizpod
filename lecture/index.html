@@ -76,7 +76,7 @@
         <p class="small muted">Pixels can do none of this. (Screen-reader support for SVG still needs explicit ARIA work.)</p>
       </div>
     </div>
-    <blockquote class="pull f" data-step="4">In 2010, three things happened in the same six weeks: Jobs killed Flash on iOS (29 Apr), Marcotte named responsive design (25 May), and the iPhone 4 shipped a 2× screen (June). The "one image fits all" chart died that summer.</blockquote>
+    <blockquote class="pull f" data-step="4">Spring 2010, in under two months: Jobs killed Flash on iOS (29 Apr), Marcotte named responsive design (25 May), and the iPhone 4 shipped a 2× screen (24 Jun). The "one image fits all" chart died that summer.</blockquote>
   </div>
   <aside class="notes">
     <p><b>2 min.</b> Three reasons, one per step. Keep it brisk; the timeline comes next.</p>
@@ -113,8 +113,8 @@
   </div>
   <aside class="notes">
     <p><b>4 min.</b> Four dates that explain why "interactive" isn't a gimmick. Let them <i>feel</i> each one for 30–40 s before you name it.</p>
-    <p><b>1 Shneiderman:</b> drag the box over the stripes (zoom), hover a bar (details). "Overview first" is the stripes; the full version is slide 24.</p>
-    <p><b>2 Heer &amp; Robertson:</b> it autoplays. Ask "where did the red bar go?" Left is hopeless, right is easy. That's their experiment in 3 seconds, and it's why D3 has transitions and keys (slide 19 does it with real data).</p>
+    <p><b>1 Shneiderman:</b> drag the box over the stripes (zoom), hover a bar (details). "Overview first" is the stripes; the full version is slide 22.</p>
+    <p><b>2 Heer &amp; Robertson:</b> it autoplays. Ask "where did the red bar go?" Left is hopeless, right is easy. That's their experiment in 3 seconds, and it's why D3 has transitions and keys (slide 17 does it with real data).</p>
     <p><b>3 Bret Victor:</b> drag 1961 to 1850, then to 1990: the same year goes from "very warm" to "barely warm", and the stripes recolour. A sentence you can argue with. The whole deck is meant to be this.</p>
     <p><b>4 512 Paths:</b> starts at Obama 431 of 512 paths. Click FL once (Obama): 255 of 256, game over. Click FL again (Romney): Obama still wins 176 of 256. Click OH twice (Romney too): 60 vs 64, a coin toss. That was the NYT's point: Romney needed nearly everything. Each branch is a data element, so fixing a state is enter/exit. 2012 electoral votes; safe states 237–191.</p>
   </aside>
@@ -136,48 +136,13 @@
       <li><b>Step 2, the plugin era:</b> prefuse (Java, 2005), Flare (Flash, Oct 2007). Interactive, but closed runtimes.</li>
       <li><b>Step 3, browsers catch up:</b> Firefox 1.5 (Nov 2005, native SVG subset), jQuery (2006), <code>querySelectorAll</code> in WebKit (Feb 2008), Chrome/V8 (Sep 2008), IE9 with native SVG (14 Mar 2011).</li>
       <li><b>Step 4, the fall:</b> "Thoughts on Flash" (29 Apr 2010), Adobe announces EOL (Jul 2017), Flash blocked (12 Jan 2021). Adobe itself: "Open standards such as HTML5, WebGL and WebAssembly have continually matured… and serve as viable alternatives."</li>
-      <li><b>Step 5, D3:</b> v1.0.0 tagged 17 Feb 2011, still on v7 today (7.9.0, Mar 2024). The browser platform only became viable the same year D3 shipped.</li>
+      <li><b>Step 5, D3:</b> v1.0.0 tagged 17 Feb 2011, still on v7 today (7.9.0, Mar 2024). The browser platform only became viable the same year D3 shipped. D3's bet (the 2011 paper): no scenegraph of its own, just "efficient manipulation of documents based on data".</li>
     </ul>
     <p>Moral: proprietary runtimes get abandoned; standards accumulate.</p>
   </aside>
 </section>
 
 <!-- 6 -->
-<section class="slide" id="protovis" data-block="1" data-minutes="2" data-title="The document is the scenegraph">
-  <div class="slide-inner">
-    <header class="slide-head">
-      <div class="kicker">Why · Bostock, Ogievetsky &amp; Heer, InfoVis 2011</div>
-      <h2>D3's bet: the document is the scenegraph</h2>
-    </header>
-    <div class="lineage f" data-step="1">
-      <div><b>prefuse</b><span>Java · CHI 2005</span></div><i>→</i>
-      <div><b>Flare</b><span>ActionScript/Flash · 2007</span></div><i>→</i>
-      <div><b>Protovis</b><span>JS + SVG, own marks · 2009</span></div><i>→</i>
-      <div class="hot"><b>D3</b><span>the DOM itself · 2011</span></div>
-    </div>
-    <div class="cols-2 grow">
-      <div class="col f" data-step="2">
-        <h3>What thousands of Protovis users ran into</h3>
-        <ul class="clean small">
-          <li><b>Debugging:</b> "internal structures are exposed only when errors arise"; "hidden control flow that is revealed only when the system crashes."</li>
-          <li><b>Expressiveness:</b> encapsulation means CSS fonts or clipping "may be stymied", and every new browser feature must be re-wrapped.</li>
-          <li><b>Learning cost:</b> a Protovis Dot "differs slightly from the standard SVG circle element", and "there are far more reference and training materials for standards than for custom libraries."</li>
-          <li><b>Performance:</b> Protovis re-rendered everything implicitly. D3 touches only what changed.</li>
-        </ul>
-      </div>
-      <div class="col f" data-step="3" style="justify-content:center">
-        <blockquote class="pull">D3 is not a traditional visualization framework… D3 solves a different, smaller problem: efficient manipulation of documents based on data.<cite>Bostock, Ogievetsky &amp; Heer, IEEE TVCG 17(12), 2011</cite></blockquote>
-        <p class="lede" style="font-size:.85rem">D3 didn't invent a new graphics system. It bet that HTML + SVG + CSS + JS were enough.</p>
-      </div>
-    </div>
-  </div>
-  <aside class="notes">
-    <p><b>2 min.</b> Each toolkit from Heer's Berkeley/Stanford group moved closer to the open web. The paper says the authors learned Protovis's problems from "thousands of user observations over the two years since releasing Protovis."</p>
-    <p>Point to make: custom toolkit scenegraphs "ignore developers' knowledge of standards". D3 lets you "bind input data to arbitrary document elements".</p>
-  </aside>
-</section>
-
-<!-- 7 -->
 <section class="slide" id="fig3" data-block="1" data-minutes="2" data-title="Same idea, four APIs">
   <div class="slide-inner">
     <header class="slide-head">
@@ -193,36 +158,7 @@
   </aside>
 </section>
 
-<!-- 8 -->
-<section class="slide" id="honest" data-block="1" data-minutes="1" data-title="D3 won on openness, not speed">
-  <div class="slide-inner">
-    <header class="slide-head">
-      <div class="kicker">Why · an honest nuance</div>
-      <h2>D3 won on openness, not raw speed</h2>
-    </header>
-    <div class="cols-2 grow">
-      <div class="col">
-        <ul class="clean">
-          <li class="f" data-step="1">The paper reports D3 is <b>"at least twice as fast as Protovis"</b>. Jason Davies's Bézier tutorial went "from 30 to around 90" fps after porting.</li>
-          <li class="f" data-step="1">The paper also admits that, for frame rate, <b>"Flash provides the best performance."</b></li>
-          <li class="f" data-step="2">D3 won on <b>openness, debuggability and ecosystem</b>: immediate evaluation "simplifies debugging and allows iterative development." The paper shows Chrome devtools editing a live chart.</li>
-        </ul>
-      </div>
-      <div class="cols-2 f" data-step="2" style="align-content:start">
-        <div class="card"><div class="date">IEEE VIS 2021</div><h3>10-Year Test-of-Time Award</h3><p class="small">for helping "bring data visualization to the mainstream"</p></div>
-        <div class="card"><div class="date">2022</div><h3>Information is Beautiful Test of Time</h3><p class="small">judges cited "more than a quarter of a million projects on GitHub" depending on D3</p></div>
-        <div class="card"><div class="big-number">v7.9</div><p class="small">still the current release (12 Mar 2024); this deck runs on it</p></div>
-        <div class="card"><div class="big-number">~114k</div><p class="small">GitHub stars (113,787 on d3js.org). npm: ~10–19M downloads a week, mostly as a dependency</p></div>
-      </div>
-    </div>
-  </div>
-  <aside class="notes">
-    <p><b>1 min.</b> The performance numbers come from 2011 browsers; present them as history. Engineering students respect the honesty: D3 wasn't the fastest. It was the most open.</p>
-    <p>npm figures vary by tracker (npmjs.com ~19M/week, Socket.dev ~10–13M). Check npmjs.com the day before the lecture.</p>
-  </aside>
-</section>
-
-<!-- 9 -->
+<!-- 7 -->
 <section class="slide" id="toolbox" data-block="1" data-minutes="2" data-title="D3 is not a charting library">
   <div class="slide-inner">
     <header class="slide-head">
@@ -240,7 +176,7 @@
   </aside>
 </section>
 
-<!-- 10 -->
+<!-- 8 -->
 <section class="slide" id="when-not" data-block="1" data-minutes="2" data-title="When not to use D3">
   <div class="slide-inner">
     <header class="slide-head">
@@ -266,7 +202,7 @@
   </aside>
 </section>
 
-<!-- 11 -->
+<!-- 9 -->
 <section class="slide" id="selections" data-block="1" data-minutes="3" data-title="Live: select, modify, transition, listen">
   <div class="slide-inner">
     <header class="slide-head"><div class="kicker">What · selections · live code</div><h2>Select → modify → transition → listen</h2></header>
@@ -279,7 +215,7 @@
   </aside>
 </section>
 
-<!-- 12 -->
+<!-- 10 -->
 <section class="slide" id="join-list" data-block="1" data-minutes="3" data-title="Live: binding data">
   <div class="slide-inner">
     <header class="slide-head"><div class="kicker">What · the data join · live code</div><h2>Bind an array to the document</h2></header>
@@ -291,7 +227,7 @@
   </aside>
 </section>
 
-<!-- 13 -->
+<!-- 11 -->
 <section class="slide" id="joinviz" data-block="1" data-minutes="5" data-title="The data join, visualized">
   <div class="slide-inner">
     <header class="slide-head"><div class="kicker">What · the data join</div><h2>Diff your data against the DOM</h2></header>
@@ -307,7 +243,7 @@
   </aside>
 </section>
 
-<!-- 14 -->
+<!-- 12 -->
 <section class="slide" id="scales" data-block="1" data-minutes="4" data-title="Scales: data space → pixel space">
   <div class="slide-inner">
     <header class="slide-head"><div class="kicker">What · scales</div><h2>A scale is a function from data space to visual space</h2></header>
@@ -319,7 +255,7 @@
   </aside>
 </section>
 
-<!-- 15 -->
+<!-- 13 -->
 <section class="slide" id="render" data-block="1" data-minutes="4" data-title="Live: axes, marks, line and area">
   <div class="slide-inner">
     <header class="slide-head"><div class="kicker">What · axes, marks, shape generators · live code</div><h2>Scales → axes → marks → shapes</h2></header>
@@ -331,7 +267,7 @@
   </aside>
 </section>
 
-<!-- 16 -->
+<!-- 14 -->
 <section class="slide" id="shapes" data-block="1" data-minutes="3" data-title="Shape generators: data → path d">
   <div class="slide-inner">
     <header class="slide-head"><div class="kicker">What · shape generators</div><h2>Data in, a path string <code>d</code> out</h2></header>
@@ -359,7 +295,7 @@
      BLOCK 2 · HOW  (45 min)
      ===================================================================== -->
 
-<!-- 18 -->
+<!-- 15 -->
 <section class="slide" id="poll" data-block="2" data-minutes="3" data-title="Where are you? (live data join)">
   <div class="slide-inner">
     <header class="slide-head"><div class="kicker">How · real-time data join</div><h2>Where are you? Tap on your phone.</h2></header>
@@ -371,7 +307,7 @@
   </aside>
 </section>
 
-<!-- 19 -->
+<!-- 16 -->
 <section class="slide" id="constancy" data-block="2" data-minutes="3" data-title="Transitions & object constancy">
   <div class="slide-inner">
     <header class="slide-head"><div class="kicker">How · transitions</div><h2>Animate, but keep track of who is who</h2></header>
@@ -387,7 +323,7 @@
   </aside>
 </section>
 
-<!-- 20 -->
+<!-- 17 -->
 <section class="slide" id="stripes-story" data-block="2" data-minutes="2" data-title="Warming stripes: the story">
   <div class="slide-inner">
     <header class="slide-head"><div class="kicker">How · our case study</div><h2>Warming stripes</h2></header>
@@ -410,7 +346,7 @@
   </aside>
 </section>
 
-<!-- 21 -->
+<!-- 18 -->
 <section class="slide" id="stripes-1" data-block="2" data-minutes="8" data-title="Live: stripes I (encode, responsive, tooltip)">
   <div class="slide-inner">
     <header class="slide-head"><div class="kicker">How · live code, part 1</div><h2>Stripes I: encode → make it responsive → details on demand</h2></header>
@@ -423,12 +359,12 @@
       <li>Diverging colour scale: <code>scaleDiverging</code> + <code>interpolateRdBu</code>. Ask: why is the domain reversed?</li>
       <li>Responsive: the fixed <code>width</code>/<code>height</code> get commented out and replaced by <code>viewBox</code> + <code>preserveAspectRatio="none"</code>. <b>Drag the stage's bottom-right corner</b> to resize: no re-render, because it's vector. The payoff of the "why".</li>
       <li>Tooltip on <code>pointerenter</code>: details-on-demand (Shneiderman).</li>
-      <li>Accessibility: <code>role="img"</code> + <code>aria-label</code> + a <code>&lt;title&gt;</code> per stripe.</li>
+      <li>Accessibility: <code>role="img"</code> turns the SVG into one picture for a screen reader; its children (and any per-stripe <code>&lt;title&gt;</code>) are skipped. So the <code>aria-label</code> carries the message with real numbers, and a visually hidden <code>&lt;table&gt;</code> (the same join, different elements) carries the data.</li>
     </ol>
   </aside>
 </section>
 
-<!-- 22 -->
+<!-- 19 -->
 <section class="slide" id="palette" data-block="2" data-minutes="4" data-title="Palette lab: design decisions are data decisions">
   <div class="slide-inner">
     <header class="slide-head"><div class="kicker">How · visualization literacy</div><h2>Same data, different story</h2></header>
@@ -440,7 +376,7 @@
   </aside>
 </section>
 
-<!-- 23 -->
+<!-- 20 -->
 <section class="slide" id="stripes-2" data-block="2" data-minutes="6" data-title="Live: stripes II (join, transition, line)">
   <div class="slide-inner">
     <header class="slide-head"><div class="kicker">How · live code, part 2</div><h2>Stripes II: switch datasets with join + transition, then overlay a line</h2></header>
@@ -457,7 +393,7 @@
   </aside>
 </section>
 
-<!-- 24 -->
+<!-- 21 -->
 <section class="slide" id="mantra" data-block="2" data-minutes="4" data-title="Overview, zoom & filter, details-on-demand">
   <div class="slide-inner">
     <header class="slide-head"><div class="kicker">How · interaction behaviours</div><h2 class="mantra-title"><span data-m="overview">Overview first,</span> <span data-m="zoom">zoom and filter,</span> <span data-m="details">then details-on-demand.</span></h2></header>
@@ -469,7 +405,7 @@
   </aside>
 </section>
 
-<!-- 25 -->
+<!-- 22 -->
 <section class="slide" id="geo" data-block="2" data-minutes="5" data-title="Live: Croatia (geo)">
   <div class="slide-inner">
     <header class="slide-head"><div class="kicker">How · layouts &amp; geography · live code</div><h2>556 municipalities, one projection, one join</h2></header>
@@ -481,7 +417,7 @@
   </aside>
 </section>
 
-<!-- 26 -->
+<!-- 23 -->
 <section class="slide" id="renderers" data-block="2" data-minutes="2" data-title="SVG vs Canvas">
   <div class="slide-inner">
     <header class="slide-head"><div class="kicker">How · choosing a renderer</div><h2>When the document gets too big</h2></header>
@@ -493,10 +429,10 @@
   </aside>
 </section>
 
-<!-- 27 -->
+<!-- 24 -->
 <section class="slide" id="ai" data-block="2" data-minutes="2" data-title="D3 in the age of AI">
   <div class="slide-inner">
-    <header class="slide-head"><div class="kicker">2026 · AI</div><h2>AI changes the economics of syntax, not of concepts</h2></header>
+    <header class="slide-head"><div class="kicker">AI · the evidence so far (2024–25)</div><h2>AI changes the economics of syntax, not of concepts</h2></header>
     <div class="cols-2 grow">
       <div class="col">
         <ul class="clean">
@@ -523,7 +459,7 @@ Explain every scale domain you choose.</pre>
   </aside>
 </section>
 
-<!-- 28 -->
+<!-- 25 -->
 <section class="slide" id="ai-review" data-block="2" data-minutes="4" data-title="Code review: spot the four bugs">
   <div class="slide-inner">
     <header class="slide-head"><div class="kicker">2026 · read code critically</div><h2>The AI wrote it. Find what's wrong before you ship it.</h2></header>
@@ -533,29 +469,29 @@ Explain every scale domain you choose.</pre>
     <p><b>4 min.</b> "Here's what a model might hand you." Let students shout before each step. Each step fixes one bug:</p>
     <ol>
       <li><code>d3.nest()</code> doesn't exist in v7 → <code>d3.rollups</code>.</li>
-      <li>The y domain starts at the minimum, not zero, so the bars lie (Lika-Senj looks like nothing).</li>
-      <li>Press "new year" a few times: <code>.enter().append()</code> with no exit means nodes pile up. → <code>.join()</code>.</li>
-      <li>No key function: sort and the bars morph instead of moving → key by county.</li>
+      <li>The y domain starts at the minimum, not zero, so the bars lie (Ličko-senjska gets no bar at all).</li>
+      <li>Press <b>top 8 / all</b>: <code>.enter().append()</code> handles only new data, so nothing updates and nothing leaves. → <code>.join()</code>.</li>
+      <li>Press <b>sort A–Z / by size</b>: with no key function the bars morph in place instead of moving → key by county.</li>
     </ol>
     <p>Optional: prompt Claude live with "add a brush that shows the mean anomaly" and review the output together.</p>
   </aside>
 </section>
 
-<!-- 29 -->
+<!-- 26 -->
 <section class="slide" id="takeaways" data-block="2" data-minutes="1" data-title="Four takeaways">
   <div class="slide-inner">
     <header class="slide-head"><div class="kicker">Wrap-up</div><h2>Four things to keep</h2></header>
     <div class="cols-2 grow takeaways">
       <div class="card f" data-step="1"><div class="big-number">1</div><h3>Visualization = mapping data to visual variables.</h3><p class="small">That mapping is a scale: domain → range.</p></div>
       <div class="card f" data-step="2"><div class="big-number">2</div><h3>The data join = diffing data against the DOM.</h3><p class="small">Enter, update, exit, and a key to keep identity.</p></div>
-      <div class="card f" data-step="3"><div class="big-number">3</div><h3>Standards outlive abstractions.</h3><p class="small">Java applets, Flash and Protovis are gone. SVG, CSS and the DOM are still here.</p></div>
+      <div class="card f" data-step="3"><div class="big-number">3</div><h3>Standards outlive abstractions.</h3><p class="small">Java applets and Flash are gone. SVG, CSS and the DOM are still here.</p></div>
       <div class="card f" data-step="4"><div class="big-number">4</div><h3>AI writes syntax. You own correctness, honesty and design.</h3><p class="small">Read every domain, every join, every version.</p></div>
     </div>
   </div>
   <aside class="notes"><p><b>1 min.</b></p></aside>
 </section>
 
-<!-- 30 -->
+<!-- 27 -->
 <section class="slide" id="resources" data-block="2" data-minutes="1" data-title="Challenge & resources">
   <div class="slide-inner">
     <header class="slide-head"><div class="kicker">Your turn</div><h2>Challenge: show <i>your</i> stripes</h2></header>
@@ -565,7 +501,7 @@ Explain every scale domain you choose.</pre>
           <li>Pick a country or city (<a href="https://showyourstripes.info">showyourstripes.info</a>, Berkeley Earth, or DHMZ for Zagreb-Grič).</li>
           <li>Build stripes + line overlay with D3 v7.9, using <code>selection.join</code> with a key.</li>
           <li>Add a brush that reports the mean anomaly of the selected period.</li>
-          <li>Make it responsive (<code>viewBox</code>) and accessible (<code>aria-label</code>, <code>&lt;title&gt;</code>).</li>
+          <li>Make it responsive (<code>viewBox</code>) and accessible (an <code>aria-label</code> with the message, a table with the numbers).</li>
           <li>Use AI if you like, but annotate every line you didn't write yourself and why it's correct.</li>
         </ul>
       </div>
@@ -579,7 +515,7 @@ Explain every scale domain you choose.</pre>
           <li>Curran Kelleher's free dataviz course (YouTube)</li>
           <li>The paper: Bostock, Ogievetsky &amp; Heer, "D³: Data-Driven Documents", IEEE TVCG 17(12), 2011</li>
         </ul>
-        <p class="muted">This deck: one HTML file plus D3 v7.9. Press <kbd>X</kbd> anywhere and read its data.</p>
+        <p class="muted">This deck is plain HTML, CSS and D3 v7.9, with no build step. Press <kbd>X</kbd> anywhere and read its data.</p>
       </div>
     </div>
   </div>

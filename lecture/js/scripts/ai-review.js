@@ -23,7 +23,7 @@
     explain: [
       "Prompt: <i>“D3 bar chart of population by county, with top-8 and sort buttons.”</i> It looks plausible. Does it run?",
       "<b>Bug 1, version drift:</b> <code>d3.nest()</code> was removed in D3 v6. It runs now, but look at the smallest bar.",
-      "<b>Bug 2, a lying scale:</b> <code>d3.extent</code> starts the y axis at the minimum, so Lika-Senj gets a zero-height bar. Bars must start at 0. Now press <b>top 8 / all</b>.",
+      "<b>Bug 2, a lying scale:</b> <code>d3.extent</code> starts the y axis at the minimum, so Ličko-senjska gets a zero-height bar. Bars must start at 0. Now press <b>top 8 / all</b>.",
       "<b>Bug 3, enter-only:</b> nothing updated or left. <code>.join()</code> fixes it. Now press <b>sort</b> and watch Zagreb.",
       "<b>Bug 4, no key:</b> the bars morph in place instead of moving. Key by county. Each bar keeps its identity.",
     ],

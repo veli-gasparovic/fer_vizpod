@@ -344,12 +344,6 @@ body.presenter .presenter-ui {
 }
 .hero-text h1 { font-size: 3.4rem; }
 
-.lineage { display: flex; align-items: stretch; gap: 0.7rem; }
-.lineage > div { flex: 1; border: 1px solid var(--rule); border-radius: 0.45rem; padding: 0.55rem 0.8rem; background: var(--surface); display: flex; flex-direction: column; }
-.lineage > div b { font-family: var(--font-serif); font-size: 1.05rem; }
-.lineage > div span { font-size: 0.6rem; color: var(--muted); }
-.lineage > div.hot { border-color: var(--accent); box-shadow: inset 0 -3px 0 var(--accent); }
-.lineage > i { align-self: center; color: var(--muted); font-style: normal; }
 
 .decide { border-left: 3px solid var(--rule); padding: 0.3rem 0 0.3rem 0.9rem; display: flex; flex-direction: column; gap: 0.15rem; }
 .decide b { font-size: 0.85rem; }
@@ -408,8 +402,6 @@ ul.clean.small { font-size: 0.8rem; gap: 0.6rem; }
 .decide span { font-size: 0.8rem; }
 .decide { padding: 0.45rem 0 0.45rem 1rem; }
 .col > .decide + .decide { margin-top: 0.3rem; }
-.lineage > div span { font-size: 0.7rem; }
-.lineage > div b { font-size: 1.25rem; }
 .slide .widget.bleed-fill { position: absolute; inset: 0; }
 /* no programming ligatures (=> must look like => when students copy it) */
 *, *::before, *::after {

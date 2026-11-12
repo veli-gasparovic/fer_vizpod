@@ -10,7 +10,7 @@ Deck.script("stripes-1", {
     "<b>scaleDiverging</b> + <b>interpolateRdBu</b>. Why is the domain reversed?",
     "<b>Responsive</b>: draw in a fixed 800×300 coordinate system; the <code>viewBox</code> scales it. Drag the corner ↘.",
     "<b>Details on demand</b>: pointer events + an HTML tooltip.",
-    "<b>Accessible</b>: <code>role=\"img\"</code>, an <code>aria-label</code>, and a <code>&lt;title&gt;</code> per stripe (hover and wait).",
+    "<b>Accessible</b>: <code>role=\"img\"</code> makes the SVG one picture to a screen reader, so the <code>aria-label</code> has to carry the message. The numbers go in a hidden <code>&lt;table&gt;</code>, built with the same join.",
   ],
   chunks: [
     { code: `
@@ -86,10 +86,22 @@ Deck.script("stripes-1", {
     { at: 5, label: "accessibility", code: `
 
       // ACCESSIBILITY
+      // role="img": a screen reader announces the <svg> as ONE picture
+      // and skips its children, so the label must carry the message.
+      const fmt = d3.format("+.1f");
+      const avg = (rows) => fmt(d3.mean(rows, (d) => d.anomaly));
       svg.attr("role", "img")
-        .attr("aria-label", \`Warming stripes of global temperature, \${data[0].year} to \${data.at(-1).year}, turning from blue to red\`);
-      stripes.append("title")
-        .text((d) => \`\${d.year}: \${d3.format("+.2f")(d.anomaly)} °C\`);
+        .attr("aria-label", \`Warming stripes, global temperature \${data[0].year}–\${data.at(-1).year}: \` +
+          \`first decade \${avg(data.slice(0, 10))} °C, last decade \${avg(data.slice(-10))} °C vs 1961–1990\`);
+
+      // the numbers themselves: a table only screen readers see (same join!)
+      const table = d3.select(root).append("table")
+        .attr("style", "position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%)");
+      table.append("caption").text("Temperature anomaly by year, °C");
+      table.selectAll("tr")
+        .data(data)
+        .join("tr")
+        .html((d) => \`<th>\${d.year}</th><td>\${fmt(d.anomaly)}</td>\`);
     ` },
   ],
 });
