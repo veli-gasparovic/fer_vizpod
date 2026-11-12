@@ -36,13 +36,17 @@
 
     /* reactive document */
     .lr-text { font: 0.72rem/1.6 var(--font-serif); color: var(--ink); }
-    .lr-drag { color: var(--accent-2); border-bottom: 1.5px dashed currentColor; cursor: ew-resize; user-select: none;
-      touch-action: none; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
-    .lr-drag:hover, .lr-drag.drag { background: color-mix(in srgb, var(--accent-2) 14%, transparent); border-radius: 0.15em; }
     .lr-out { font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .lr { user-select: none; -webkit-user-select: none; }
+    .lr-fix { display: inline-block; text-align: center; white-space: nowrap; }
+    .lr-fix.left { text-align: left; } .lr-fix.right { text-align: right; }
     .lr-out.warm { color: var(--accent); } .lr-out.cold { color: var(--accent-2); }
-    .lr .base { fill: none; stroke: var(--ink); stroke-width: 1.5; }
+    .lr-val { font-weight: 700; font-variant-numeric: tabular-nums; }
+    .lr .win { fill: none; stroke: var(--ink); stroke-width: 2; rx: 2; }
+    .lr .yr { fill: none; stroke: var(--ink); stroke-width: 1; }
     .lr .mark { fill: var(--ink); }
+    .lr svg.grabbing { cursor: grabbing !important; }
+    .lr .tag b { color: var(--ink-2); }
     .lr .lbl { font: 0.42rem var(--font-mono); fill: var(--ink-2); }
 
     /* 512 paths */
@@ -195,69 +199,108 @@
     mount(el, { opts }) {
       el.innerHTML = `<div class="lin lr">
         <div class="lr-text">Measured against the 30 years from
-          <span class="lr-drag" data-k="start"></span>–<span data-o="end"></span>,
-          the year <span class="lr-drag" data-k="year"></span> was
-          <span class="lr-out" data-o="diff"></span>.
-          <span class="lr-out" data-o="warm"></span> of the 176 years since 1850 are warmer than that baseline.</div>
-        <div class="tag">← drag the <span style="color:var(--accent-2)">blue numbers</span> →</div>
+          <span class="lr-val lr-fix" data-o="start"></span>–<span class="lr-val lr-fix" data-o="end"></span>,
+          the year <span class="lr-val lr-fix" data-o="year"></span> was
+          <span class="lr-out lr-fix left" data-o="diff"></span>
+          <span class="lr-out lr-fix right" data-o="warm"></span> of the 176 years since 1850 are warmer than that baseline.</div>
+        <div class="tag">drag the <b>baseline</b> · click a <b>year</b></div>
         <svg></svg></div>`;
       const data = values();
       const byYear = new Map(data.map((d) => [d.year, d.anomaly]));
       const color = RDBU(1.2);
       const st = { start: 1961, year: 2024 };
-      const lim = { start: [1850, 1996], year: [1850, 2025] };
       const svg = d3.select(el).select("svg");
+
+      // Every value that changes gets a fixed width (its widest possible text), so dragging never re-wraps the sentence.
+      const yrs = (a, b) => d3.range(a, b + 1).map(String);
+      let fitted = false;
+      function fit() {
+        const digit = d3.greatest("0123456789", (c) => measure(el.querySelector('[data-o="diff"]'), c));
+        const samples = {
+          '[data-o="start"]': yrs(1850, 1996), '[data-o="end"]': yrs(1879, 2025), '[data-o="year"]': yrs(1850, 2025),
+          '[data-o="diff"]': ["warmer.", "colder."].map((w) => `${digit}.${digit}${digit} °C ${w}`),
+          '[data-o="warm"]': [digit.repeat(3)],
+        };
+        let ok = true;
+        for (const [sel, list] of Object.entries(samples)) {
+          const span = el.querySelector(sel), w = d3.max(list, (t) => measure(span, t));
+          if (!w) ok = false; else span.style.minWidth = Math.ceil(w) + "px";
+        }
+        fitted = ok;
+      }
+      function measure(span, text) {
+        const m = document.createElement("span");
+        m.style.cssText = "position:absolute;visibility:hidden;white-space:nowrap";
+        m.textContent = text; span.appendChild(m);
+        const w = m.offsetWidth; m.remove(); return w;
+      }
+      document.fonts?.ready.then(() => { fitted = false; render(); });
 
       function baseline() { return d3.mean(data.filter((d) => d.year >= st.start && d.year < st.start + 30), (d) => d.anomaly); }
 
       function render() {
+        if (!fitted) fit();
         const b = baseline(), diff = byYear.get(st.year) - b;
-        el.querySelector('[data-k="start"]').textContent = st.start;
+        el.querySelector('[data-o="start"]').textContent = st.start;
         el.querySelector('[data-o="end"]').textContent = st.start + 29;
-        el.querySelector('[data-k="year"]').textContent = st.year;
+        el.querySelector('[data-o="year"]').textContent = st.year;
         const o = el.querySelector('[data-o="diff"]');
-        o.textContent = Math.abs(diff).toFixed(2) + " °C " + (diff >= 0 ? "warmer" : "colder");
-        o.className = "lr-out " + (diff >= 0 ? "warm" : "cold");
+        o.textContent = `${Math.abs(diff).toFixed(2)} °C ${diff >= 0 ? "warmer" : "colder"}.`;
+        o.classList.toggle("warm", diff >= 0); o.classList.toggle("cold", diff < 0);
         el.querySelector('[data-o="warm"]').textContent = data.filter((d) => d.anomaly > b).length;
 
         const [W, H] = size(svg);
-        const x = d3.scaleBand(data.map((d) => d.year), [0, W]);
-        const top = 12, sh = H - top - 12;
+        x = d3.scaleBand(data.map((d) => d.year), [0, W]);
+        const sh = H - TOP - BOT;
         svg.selectAll("rect.s").data(data, (d) => d.year).join("rect").attr("class", "s")
-          .attr("x", (d) => x(d.year)).attr("width", x.bandwidth() + 0.5).attr("y", top).attr("height", sh)
+          .attr("x", (d) => x(d.year)).attr("width", x.bandwidth() + 0.5).attr("y", TOP).attr("height", sh)
           .attr("fill", (d) => color(d.anomaly - b));
+        // the baseline: a box you drag
         const bx = x(st.start), bw = x(st.start + 29) + x.bandwidth() - bx;
-        svg.selectAll("path.base").data([0]).join("path").attr("class", "base")
-          .attr("d", `M${bx},${top - 2}V${top - 7}H${bx + bw}V${top - 2}`);
-        svg.selectAll("text.lb").data([0]).join("text").attr("class", "lbl lb").attr("y", top - 9)
-          .attr("x", Math.min(Math.max(bx + bw / 2, 22), W - 22)).attr("text-anchor", "middle").text("baseline");
-        const yx = x(st.year) + x.bandwidth() / 2;
+        svg.selectAll("rect.win").data([0]).join("rect").attr("class", "win")
+          .attr("x", bx).attr("y", TOP - 1).attr("width", bw).attr("height", sh + 2);
+        svg.selectAll("text.lb").data([0]).join("text").attr("class", "lbl lb").attr("y", TOP - 4)
+          .attr("x", Math.min(Math.max(bx + bw / 2, 34), W - 34)).attr("text-anchor", "middle").text("⇠ baseline ⇢");
+        // the year: an outlined stripe and a marker you can drag
+        const yx = x(st.year);
+        svg.selectAll("rect.yr").data([0]).join("rect").attr("class", "yr")
+          .attr("x", yx - 0.5).attr("y", TOP).attr("width", x.bandwidth() + 1).attr("height", sh);
+        const mx = yx + x.bandwidth() / 2, my = TOP + sh + 2;
         svg.selectAll("path.mark").data([0]).join("path").attr("class", "mark")
-          .attr("d", `M${yx - 4},${top + sh + 9}L${yx + 4},${top + sh + 9}L${yx},${top + sh + 2}Z`);
-        svg.on("click", (ev) => {
-          const [px] = d3.pointer(ev);
-          const yr = x.domain()[Math.max(0, Math.min(data.length - 1, Math.floor(px / x.step())))];
-          st.year = yr; render();
-        });
+          .attr("d", `M${mx - 5},${my + 9}L${mx + 5},${my + 9}L${mx},${my}Z`);
       }
 
-      el.querySelectorAll(".lr-drag").forEach((span) => {
-        const k = span.dataset.k;
-        let x0 = 0, v0 = 0;
-        span.addEventListener("pointerdown", (e) => {
-          e.preventDefault(); span.setPointerCapture(e.pointerId); span.classList.add("drag");
-          x0 = e.clientX; v0 = st[k];
-        });
-        span.addEventListener("pointermove", (e) => {
-          if (!span.hasPointerCapture(e.pointerId)) return;
-          const v = Math.round(v0 + (e.clientX - x0) / 4);
-          st[k] = Math.max(lim[k][0], Math.min(lim[k][1], v));
-          render();
-        });
-        const up = (e) => { span.classList.remove("drag"); if (span.hasPointerCapture(e.pointerId)) span.releasePointerCapture(e.pointerId); };
-        span.addEventListener("pointerup", up); span.addEventListener("pointercancel", up);
-      });
-      return lifecycle(el, opts, render);
+      // Pointer: press inside the baseline box to slide it; anywhere else (or on the ▲) to scrub the year.
+      const TOP = 14, BOT = 14;
+      let x = null, drag = null;
+      const yearAt = (px) => x.domain()[Math.max(0, Math.min(data.length - 1, Math.floor(px / x.step())))];
+      svg.style("touch-action", "none")
+        .on("pointerdown", (ev) => {
+          if (!x) return;
+          ev.preventDefault();
+          const [px, py] = d3.pointer(ev), bx = x(st.start), bw = 30 * x.step();
+          const inBox = px >= bx && px <= bx + bw && py < size(svg)[1] - BOT;
+          drag = inBox ? { k: "start", off: px - bx } : { k: "year" };
+          svg.node().setPointerCapture(ev.pointerId);
+          svg.classed("grabbing", inBox);
+          move(ev);
+        })
+        .on("pointermove", (ev) => {
+          if (drag) return move(ev);
+          if (!x) return;
+          const [px, py] = d3.pointer(ev), bx = x(st.start);
+          svg.style("cursor", px >= bx && px <= bx + 30 * x.step() && py < size(svg)[1] - BOT ? "grab" : "ew-resize");
+        })
+        .on("pointerup pointercancel", (ev) => { drag = null; svg.classed("grabbing", false); });
+      function move(ev) {
+        const [px] = d3.pointer(ev);
+        if (drag.k === "start") st.start = Math.max(1850, Math.min(1996, yearAt(px - drag.off + x.step() / 2)));
+        else st.year = yearAt(px);
+        render();
+      }
+
+      const lc = lifecycle(el, opts, render);
+      return { ...lc, resize() { fitted = false; lc.resize(); } };
     },
   });
 

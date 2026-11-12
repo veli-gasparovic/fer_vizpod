@@ -122,7 +122,7 @@
       if (hit) { mine.delete(hit.timestamp); save(); client.remove(hit.timestamp); return; }
       if (px < ox || px > ox + S || py < oy || py > oy + S) return;
       // one person, one dot: placing a new one moves the old one
-      [...mine].forEach((ts) => { mine.delete(ts); client.remove(ts); });
+      const all = [...mine]; mine.clear(); client.removeMany(all);
       const p = client.add(x.invert(px), y.invert(py));
       mine.add(p.timestamp); save();
       render();

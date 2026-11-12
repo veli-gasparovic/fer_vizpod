@@ -120,9 +120,9 @@
   </div>
   <aside class="notes">
     <p><b>4 min.</b> Four dates that explain why "interactive" isn't a gimmick. Let them <i>feel</i> each one for 30–40 s before you name it.</p>
-    <p><b>1 Shneiderman:</b> drag the box over the stripes (zoom), hover a bar (details). "Overview first" is the stripes; the full version is slide 22.</p>
-    <p><b>2 Heer &amp; Robertson:</b> it autoplays. Ask "where did the red bar go?" Left is hopeless, right is easy. That's their experiment in 3 seconds, and it's why D3 has transitions and keys (slide 17 does it with real data).</p>
-    <p><b>3 Bret Victor:</b> drag 1961 to 1850, then to 1990: the same year goes from "very warm" to "barely warm", and the stripes recolour. A sentence you can argue with. The whole deck is meant to be this.</p>
+    <p><b>1 Shneiderman:</b> drag the box over the stripes (zoom), hover a bar (details). "Overview first" is the stripes; the full version is slide 24.</p>
+    <p><b>2 Heer &amp; Robertson:</b> it autoplays. Ask "where did the red bar go?" Left is hopeless, right is easy. That's their experiment in 3 seconds, and it's why D3 has transitions and keys (slide 19 does it with real data).</p>
+    <p><b>3 Bret Victor:</b> drag the baseline box on the stripes all the way left (1850), then right (1990s): the same year goes from "very warm" to "barely warm", and the stripes recolour. A sentence you can argue with. The whole deck is meant to be this.</p>
     <p><b>4 512 Paths:</b> starts at Obama 431 of 512 paths. Click FL once (Obama): 255 of 256, game over. Click FL again (Romney): Obama still wins 176 of 256. Click OH twice (Romney too): 60 vs 64, a coin toss. That was the NYT's point: Romney needed nearly everything. Each branch is a data element, so fixing a state is enter/exit. 2012 electoral votes; safe states 237–191.</p>
   </aside>
 </section>
@@ -137,7 +137,7 @@
     <div class="widget grow" data-widget="timeline"></div>
   </div>
   <aside class="notes">
-    <p><b>3 min.</b> This timeline is itself a D3 chart. Hover any event for details-on-demand; press <kbd>X</kbd> to show its bound data.</p>
+    <p><b>3 min.</b> This timeline is itself a D3 chart. Step 0 is the whole argument at a glance: every plugin bar ends in a red ✕, every standard runs off the edge as an arrow. The steps then label the milestones row by row. Hover any bar or dot for details-on-demand; press <kbd>X</kbd> to show its bound data.</p>
     <ul>
       <li><b>Step 1, standards on paper:</b> SVG 1.0 is a W3C Recommendation in Sep 2001, but browsers lag. IE had VML; others needed the Adobe SVG Viewer plugin.</li>
       <li><b>Step 2, the plugin era:</b> prefuse (Java, 2005), Flare (Flash, Oct 2007). Interactive, but closed runtimes.</li>
@@ -150,6 +150,22 @@
 </section>
 
 <!-- 6 -->
+<section class="slide" id="svg-video" data-block="1" data-minutes="3" data-title="SVG in 100 seconds">
+  <div class="slide-inner">
+    <header class="slide-head">
+      <div class="kicker">Bridge · the standard D3 is built on</div>
+      <h2>SVG in 100 seconds</h2>
+    </header>
+    <div class="widget grow" data-widget="embed" data-opt='{"video": true, "src": "https://www.youtube-nocookie.com/embed/emFMHH2Bfvo?start=4&amp;rel=0&amp;enablejsapi=1", "href": "https://www.youtube.com/watch?v=emFMHH2Bfvo&amp;t=4s", "label": "SVG Explained in 100 Seconds (Fireship)"}'></div>
+  </div>
+  <aside class="notes">
+    <p><b>3 min, video</b> (Fireship, "SVG Explained in 100 Seconds", 2:20 long, starts at 0:04). Click ▶, then click outside the video to get the arrow keys back. Leaving the slide pauses it.</p>
+    <p>Before playing: "the timeline said the standards won. Here is the one we will use all day." Afterwards, point at three things to remember: elements + attributes (D3 selects and modifies exactly these), <code>viewBox</code> (responsive stripes later), and the path <code>d</code> string (slide 16 generates it).</p>
+    <p>No network: skip it, the link is under the frame.</p>
+  </aside>
+</section>
+
+<!-- 7 -->
 <section class="slide" id="fig3" data-block="1" data-minutes="2" data-title="Same idea, four APIs">
   <div class="slide-inner">
     <header class="slide-head">
@@ -165,7 +181,7 @@
   </aside>
 </section>
 
-<!-- 7 -->
+<!-- 8 -->
 <section class="slide" id="toolbox" data-block="1" data-minutes="2" data-title="D3 is not a charting library">
   <div class="slide-inner">
     <header class="slide-head">
@@ -183,7 +199,7 @@
   </aside>
 </section>
 
-<!-- 8 -->
+<!-- 9 -->
 <section class="slide" id="when-not" data-block="1" data-minutes="2" data-title="When not to use D3">
   <div class="slide-inner">
     <header class="slide-head">
@@ -209,7 +225,23 @@
   </aside>
 </section>
 
-<!-- 9 -->
+<!-- 10 -->
+<section class="slide" id="mine" data-block="1" data-minutes="2" data-title="My D3: the Resilience Index">
+  <div class="slide-inner">
+    <header class="slide-head">
+      <div class="kicker">Bridge · what D3 is for, in practice</div>
+      <h2>One of mine: the World Risk Poll Resilience Index</h2>
+    </header>
+    <div class="widget grow" data-widget="embed" data-opt='{"src": "https://resilience.pages.dev/", "label": "World Risk Poll Resilience Index"}'></div>
+  </div>
+  <aside class="notes">
+    <p><b>2 min, live.</b> A real project, not a tutorial chart: bespoke layout, animated transitions between years, filters and highlights. Exactly the "bespoke, novel, explorable" corner from the previous slide.</p>
+    <p>Click inside the page to use it (the frame gets a red outline: the keyboard now belongs to the page). Click anywhere outside the frame to get the arrow keys back.</p>
+    <p>If the network is down, skip it: the link opens it in a new tab later.</p>
+  </aside>
+</section>
+
+<!-- 11 -->
 <section class="slide" id="selections" data-block="1" data-minutes="3" data-title="Live: select, modify, transition, listen">
   <div class="slide-inner">
     <header class="slide-head"><div class="kicker">What · selections · live code</div><h2>Select → modify → transition → listen</h2></header>
@@ -222,7 +254,7 @@
   </aside>
 </section>
 
-<!-- 10 -->
+<!-- 12 -->
 <section class="slide" id="join-list" data-block="1" data-minutes="3" data-title="Live: binding data">
   <div class="slide-inner">
     <header class="slide-head"><div class="kicker">What · the data join · live code</div><h2>Bind an array to the document</h2></header>
@@ -234,7 +266,7 @@
   </aside>
 </section>
 
-<!-- 11 -->
+<!-- 13 -->
 <section class="slide" id="joinviz" data-block="1" data-minutes="5" data-title="The data join, visualized">
   <div class="slide-inner">
     <header class="slide-head"><div class="kicker">What · the data join</div><h2>Diff your data against the DOM</h2></header>
@@ -250,7 +282,7 @@
   </aside>
 </section>
 
-<!-- 12 -->
+<!-- 14 -->
 <section class="slide" id="scales" data-block="1" data-minutes="4" data-title="Scales: data space → pixel space">
   <div class="slide-inner">
     <header class="slide-head"><div class="kicker">What · scales</div><h2>A scale is a function from data space to visual space</h2></header>
@@ -262,19 +294,25 @@
   </aside>
 </section>
 
-<!-- 13 -->
-<section class="slide" id="render" data-block="1" data-minutes="4" data-title="Live: axes, marks, line and area">
+<!-- 15 -->
+<section class="slide" id="render" data-block="1" data-minutes="4" data-title="Anatomy of a chart: scales, axes, marks, shapes">
   <div class="slide-inner">
-    <header class="slide-head"><div class="kicker">What · axes, marks, shape generators · live code</div><h2>Scales → axes → marks → shapes</h2></header>
-    <div class="widget grow" data-widget="code" data-script="render"></div>
+    <header class="slide-head"><div class="kicker">What · from scales to a chart</div><h2>Scales → axes → marks → shapes</h2></header>
+    <div class="widget grow" data-widget="anatomy"></div>
   </div>
   <aside class="notes">
-    <p><b>4 min.</b> Your <code>render()</code> from <code>d3.html</code>. Point out the <code>.transition().call(yAxis)</code>: axes animate too, because an axis is just a scale drawn into a <code>&lt;g&gt;</code>.</p>
-    <p>On the line/area steps: a shape generator turns data into a path string <code>d</code>. Next slide makes that visible.</p>
+    <p><b>4 min.</b> One chart, built up a layer at a time. The code panel always shows the code for the current layer, with the real numbers.</p>
+    <ul>
+      <li><b>Step 0, margins + scales:</b> the plot area sits inside the margins. Point at the flipped y range: SVG's origin is top-left, y grows down.</li>
+      <li><b>Step 1, axes:</b> an axis is a scale drawn into a <code>&lt;g&gt;</code>. Move the pointer over the plot: <code>invert()</code> runs the scale backwards (this is how brushing and tooltips find data).</li>
+      <li><b>Step 2, marks:</b> the join from two slides ago, positioned by scale calls. Hover a circle; press <b>new data</b>.</li>
+      <li><b>Step 3, rescale:</b> the domain animates to [0, 50]. Then grab the y axis and drag it up and down: marks and axis stay in sync because they share one scale. Same <code>.transition().call(yAxis)</code> as in your <code>d3.html</code> <code>render()</code>.</li>
+      <li><b>Step 4, shapes:</b> <code>d3.line()</code> / <code>d3.area()</code> turn the whole array into one path string. Toggle the curve. Next slide opens up that string.</li>
+    </ul>
   </aside>
 </section>
 
-<!-- 14 -->
+<!-- 16 -->
 <section class="slide" id="shapes" data-block="1" data-minutes="3" data-title="Shape generators: data → path d">
   <div class="slide-inner">
     <header class="slide-head"><div class="kicker">What · shape generators</div><h2>Data in, a path string <code>d</code> out</h2></header>
@@ -302,19 +340,20 @@
      BLOCK 2 · HOW  (45 min)
      ===================================================================== -->
 
-<!-- 15 -->
+<!-- 17 -->
 <section class="slide" id="poll" data-block="2" data-minutes="3" data-title="Where are you? (live data join)">
   <div class="slide-inner">
     <header class="slide-head"><div class="kicker">How · real-time data join</div><h2>Where are you? Tap on your phone.</h2></header>
     <div class="widget grow" data-widget="dotsockets"></div>
   </div>
   <aside class="notes">
+    <p class="muted">Clearing the dots: "clear all dots…" in this presenter window's bottom bar (three clicks). It is not on the public slide.</p>
     <p><b>3 min.</b> x = JavaScript experience, y = dataviz experience. Each tap goes as a POST to a Cloudflare worker, which broadcasts all the points over a WebSocket to every screen. Each screen runs one data join keyed by timestamp.</p>
     <p><b>Step 1:</b> reveal the render function: enter (grow in), update (move), exit (shrink out), the same three sets as before the break, now driven by a network.</p>
   </aside>
 </section>
 
-<!-- 16 -->
+<!-- 18 -->
 <section class="slide" id="constancy" data-block="2" data-minutes="3" data-title="Transitions & object constancy">
   <div class="slide-inner">
     <header class="slide-head"><div class="kicker">How · transitions</div><h2>Animate, but keep track of who is who</h2></header>
@@ -330,7 +369,7 @@
   </aside>
 </section>
 
-<!-- 17 -->
+<!-- 19 -->
 <section class="slide" id="stripes-story" data-block="2" data-minutes="2" data-title="Warming stripes: the story">
   <div class="slide-inner">
     <header class="slide-head"><div class="kicker">How · our case study</div><h2>Warming stripes</h2></header>
@@ -353,7 +392,7 @@
   </aside>
 </section>
 
-<!-- 18 -->
+<!-- 20 -->
 <section class="slide" id="stripes-1" data-block="2" data-minutes="8" data-title="Live: stripes I (encode, responsive, tooltip)">
   <div class="slide-inner">
     <header class="slide-head"><div class="kicker">How · live code, part 1</div><h2>Stripes I: encode → make it responsive → details on demand</h2></header>
@@ -371,7 +410,7 @@
   </aside>
 </section>
 
-<!-- 19 -->
+<!-- 21 -->
 <section class="slide" id="palette" data-block="2" data-minutes="4" data-title="Palette lab: design decisions are data decisions">
   <div class="slide-inner">
     <header class="slide-head"><div class="kicker">How · visualization literacy</div><h2>Same data, different story</h2></header>
@@ -383,7 +422,7 @@
   </aside>
 </section>
 
-<!-- 20 -->
+<!-- 22 -->
 <section class="slide" id="stripes-2" data-block="2" data-minutes="6" data-title="Live: stripes II (join, transition, line)">
   <div class="slide-inner">
     <header class="slide-head"><div class="kicker">How · live code, part 2</div><h2>Stripes II: switch datasets with join + transition, then overlay a line</h2></header>
@@ -400,7 +439,7 @@
   </aside>
 </section>
 
-<!-- 21 -->
+<!-- 23 -->
 <section class="slide" id="mantra" data-block="2" data-minutes="4" data-title="Overview, zoom & filter, details-on-demand">
   <div class="slide-inner">
     <header class="slide-head"><div class="kicker">How · interaction behaviours</div><h2 class="mantra-title"><span data-m="overview">Overview first,</span> <span data-m="zoom">zoom and filter,</span> <span data-m="details">then details-on-demand.</span></h2></header>
@@ -412,7 +451,7 @@
   </aside>
 </section>
 
-<!-- 22 -->
+<!-- 24 -->
 <section class="slide" id="geo" data-block="2" data-minutes="5" data-title="Live: Croatia (geo)">
   <div class="slide-inner">
     <header class="slide-head"><div class="kicker">How · layouts &amp; geography · live code</div><h2>556 municipalities, one projection, one join</h2></header>
@@ -424,7 +463,7 @@
   </aside>
 </section>
 
-<!-- 23 -->
+<!-- 25 -->
 <section class="slide" id="renderers" data-block="2" data-minutes="2" data-title="SVG vs Canvas">
   <div class="slide-inner">
     <header class="slide-head"><div class="kicker">How · choosing a renderer</div><h2>When the document gets too big</h2></header>
@@ -436,7 +475,7 @@
   </aside>
 </section>
 
-<!-- 24 -->
+<!-- 26 -->
 <section class="slide" id="ai" data-block="2" data-minutes="2" data-title="D3 in the age of AI">
   <div class="slide-inner">
     <header class="slide-head"><div class="kicker">AI · the evidence so far (2024–25)</div><h2>AI changes the economics of syntax, not of concepts</h2></header>
@@ -466,7 +505,7 @@ Explain every scale domain you choose.</pre>
   </aside>
 </section>
 
-<!-- 25 -->
+<!-- 27 -->
 <section class="slide" id="ai-review" data-block="2" data-minutes="4" data-title="Code review: spot the four bugs">
   <div class="slide-inner">
     <header class="slide-head"><div class="kicker">2026 · read code critically</div><h2>The AI wrote it. Find what's wrong before you ship it.</h2></header>
@@ -484,7 +523,7 @@ Explain every scale domain you choose.</pre>
   </aside>
 </section>
 
-<!-- 26 -->
+<!-- 28 -->
 <section class="slide" id="takeaways" data-block="2" data-minutes="1" data-title="Four takeaways">
   <div class="slide-inner">
     <header class="slide-head"><div class="kicker">Wrap-up</div><h2>Four things to keep</h2></header>
@@ -498,7 +537,7 @@ Explain every scale domain you choose.</pre>
   <aside class="notes"><p><b>1 min.</b></p></aside>
 </section>
 
-<!-- 27 -->
+<!-- 29 -->
 <section class="slide" id="resources" data-block="2" data-minutes="1" data-title="Challenge & resources">
   <div class="slide-inner">
     <header class="slide-head"><div class="kicker">Your turn</div><h2>Challenge: show <i>your</i> stripes</h2></header>
@@ -550,11 +589,13 @@ Explain every scale domain you choose.</pre>
 <script src="js/widgets/lineage.js"></script>
 <script src="js/widgets/mobileshare.js"></script>
 <script src="js/widgets/threecards.js"></script>
+<script src="js/widgets/embed.js"></script>
 <script src="js/widgets/timeline.js"></script>
 <script src="js/widgets/fig3.js"></script>
 <script src="js/widgets/toolbox.js"></script>
 <script src="js/widgets/joinviz.js"></script>
 <script src="js/widgets/scales.js"></script>
+<script src="js/widgets/anatomy.js"></script>
 <script src="js/widgets/curves.js"></script>
 <script src="js/widgets/sortbars.js"></script>
 <script src="js/widgets/stress.js"></script>
@@ -565,7 +606,6 @@ Explain every scale domain you choose.</pre>
 <!-- live-code scripts -->
 <script src="js/scripts/selections.js"></script>
 <script src="js/scripts/join-list.js"></script>
-<script src="js/scripts/render.js"></script>
 <script src="js/scripts/stripes-1.js"></script>
 <script src="js/scripts/stripes-2.js"></script>
 <script src="js/scripts/geo.js"></script>

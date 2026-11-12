@@ -12,6 +12,7 @@
   const registry = {};
   const scripts = {};
   const themeListeners = [];
+  const presenterTools = [];
   const isPresenter = new URLSearchParams(location.search).has("presenter");
   const channel = "BroadcastChannel" in window ? new BroadcastChannel("vizpod-deck") : null;
 
@@ -32,6 +33,10 @@
     /** Read a theme CSS variable, e.g. Deck.color('--ink'). */
     color(v) { return getComputedStyle(document.documentElement).getPropertyValue(v).trim(); },
     onTheme(fn) { themeListeners.push(fn); },
+
+    /** A control that exists only in the presenter window, shown while one of `slideIds` is current.
+     *  build(box) fills the box and may return { show(), hide() }. */
+    presenterTool(slideIds, build) { presenterTools.push({ ids: slideIds, build, box: null, api: null, on: false }); },
     theme() { return document.documentElement.dataset.theme || "light"; },
 
     /** Inject widget CSS once. */
@@ -470,6 +475,7 @@
         <button class="btn" id="pv-reset">reset block timer</button>
         <button class="btn" id="pv-black">blackout (B)</button>
         <button class="btn" id="pv-xray">X-ray on audience (X)</button>
+        <span class="pv-tools" id="pv-tools"></span>
       </div>`;
     document.body.appendChild(ui);
     pv = { start: Date.now(), paused: false, pausedAt: 0, block: null };
@@ -508,6 +514,18 @@
     document.getElementById("pv-notes").innerHTML = s.notes || "<p class='muted'>No notes.</p>";
     const n = Deck.slides[s.i + 1];
     document.getElementById("pv-next").textContent = n ? n.title : "— end —";
+    presenterTools.forEach((t) => {
+      const on = t.ids.includes(s.el.id);
+      if (on && !t.box) {
+        t.box = document.createElement("span");
+        t.box.className = "pv-tool";
+        document.getElementById("pv-tools").appendChild(t.box);
+        try { t.api = t.build(t.box) || {}; } catch (e) { console.error(e); t.api = {}; }
+      }
+      if (!t.box || on === t.on) return;
+      t.on = on; t.box.hidden = !on;
+      if (on) t.api.show && safe(() => t.api.show()); else t.api.hide && safe(() => t.api.hide());
+    });
     document.getElementById("pv-plan").innerHTML = Deck.slides.filter((x) => x.block === s.block)
       .map((x) => `<li class="${x.i === s.i ? "current" : x.i < s.i ? "done" : ""}">${x.title} <span class="muted">${x.minutes}′</span></li>`).join("");
     tickPresenter();

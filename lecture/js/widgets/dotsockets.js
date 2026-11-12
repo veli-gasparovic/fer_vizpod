@@ -13,6 +13,14 @@
     const cfg = (window.LECTURE || {}).dotsockets || {};
     const subs = new Set();
     let ws = null, points = [], status = "offline", backoff = 1000, timer = null;
+    // Deletes: the worker broadcasts the full array after every change, and concurrent DELETEs can
+    // overwrite each other on the worker. So deletes go out one at a time, the dots stay hidden while
+    // `pending`, and anything the server still has after a round is deleted again.
+    let raw = [];                 // the last array the server sent
+    const pending = new Set();    // timestamps we are deleting
+    let queue = Promise.resolve();
+    const has = (arr, ts) => arr.some((d) => d.timestamp === ts);
+    const visible = () => raw.filter((d) => !pending.has(d.timestamp));
 
     const valid = (d) => d && typeof d.x === "number" && typeof d.y === "number" && typeof d.timestamp === "number";
     const notify = () => subs.forEach((fn) => { try { fn(points, status); } catch (e) { console.error(e); } });
@@ -28,7 +36,11 @@
         if (ws !== me) return;
         try {
           const msg = JSON.parse(evt.data);
-          if (Array.isArray(msg)) { points = msg.filter(valid); notify(); }
+          if (Array.isArray(msg)) {
+            raw = msg.filter(valid);
+            for (const ts of pending) if (!has(raw, ts)) pending.delete(ts); // confirmed gone
+            points = visible(); notify();
+          }
         } catch (e) { /* ignore malformed */ }
       };
       ws.onerror = () => {};
@@ -68,10 +80,29 @@
           .catch(() => console.warn("dotsockets: POST failed"));
         return p;
       },
-      remove(ts) {
-        points = points.filter((d) => d.timestamp !== ts); notify(); // optimistic
-        if (cfg.post) return fetch(`${cfg.post}?timestamp=${ts}`, { method: "DELETE" }).catch(() => console.warn("dotsockets: DELETE failed"));
-        return Promise.resolve();
+      remove(ts) { return this.removeMany([ts]); },
+      /** delete several dots; resolves with how many the server still has afterwards */
+      removeMany(list) {
+        list.forEach((ts) => pending.add(ts));
+        points = points.filter((d) => !pending.has(d.timestamp)); notify(); // optimistic
+        if (!cfg.post) return Promise.resolve(0);
+        const del = (ts) => fetch(`${cfg.post}?timestamp=${ts}`, { method: "DELETE" })
+          .then((r) => { if (r.ok) raw = raw.filter((d) => d.timestamp !== ts); })
+          .catch(() => console.warn("dotsockets: DELETE failed"));
+        const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+        queue = queue.then(async () => {
+          for (let round = 0; round < 4; round++) {
+            const todo = round === 0 ? list : list.filter((ts) => has(raw, ts));
+            if (!todo.length) break;
+            for (const ts of todo) await del(ts);   // one at a time
+            await wait(round === 0 ? 800 : 1500);   // let the last broadcast arrive
+          }
+          const left = list.filter((ts) => has(raw, ts)).length;
+          list.forEach((ts) => pending.delete(ts));
+          points = visible(); notify();
+          return left;
+        });
+        return queue;
       },
     };
   })();
@@ -104,10 +135,6 @@
     .ds-counts span i { font-style: normal; font-weight: 700; }
     .ds-counts .enter.flash { background: var(--enter); color: #fff; transition: none; }
     .ds-counts .exit.flash { background: var(--exit); color: #fff; transition: none; }
-    .ds-clear { margin-top: auto; align-self: flex-start; font-size: 0.55rem; color: var(--muted); background: none; border: 1px dashed var(--rule);
-      border-radius: 999px; padding: 0.2rem 0.6rem; cursor: pointer; }
-    .ds-clear.arm1 { color: var(--exit); border-color: var(--exit); border-style: solid; }
-    .ds-clear.arm2 { color: #fff; background: var(--exit); border-color: var(--exit); border-style: solid; }
     .ds-chart .quad { font: italic 0.62rem var(--font-serif); fill: var(--muted); }
     .ds-chart .axis-label { font: 600 0.58rem var(--font-sans); fill: var(--ink-2); letter-spacing: 0.03em; }
     .ds-chart .tick-label { font: 0.52rem var(--font-sans); fill: var(--muted); }
@@ -135,6 +162,37 @@ circles.<span class="tk-fn">transition</span>(t)                     <span class
 <span class="tk-com">// …and the network part is just:</span>
 ws.onmessage = (e) <span class="tk-kw">=&gt;</span> <span class="tk-fn">render</span>(JSON.<span class="tk-fn">parse</span>(e.data));`;
 
+  // "clear all dots" lives only in the presenter window (the public deck has no delete button).
+  // Three clicks, no browser dialogs.
+  Deck.presenterTool(["poll", "break"], (box) => {
+    const client = window.DotSocketsClient;
+    box.innerHTML = `<button class="btn ds-pclear">clear all dots…</button> <span class="pv-sub ds-pmsg"></span>`;
+    const btn = box.querySelector("button"), msg = box.querySelector(".ds-pmsg");
+    let points = [], status = "offline", unsub = null, arm = 0, armTimer = null, busy = false;
+    const idle = () => { arm = 0; btn.style.cssText = ""; btn.textContent = `clear all ${points.length} dots…`; };
+    btn.onclick = () => {
+      if (busy) return;
+      clearTimeout(armTimer);
+      arm++;
+      if (arm === 1) { btn.style.cssText = "color: var(--exit); border-color: var(--exit)"; btn.textContent = `delete all ${points.length} dots for everyone?`; }
+      else if (arm === 2) { btn.style.cssText = "color: #fff; background: var(--exit); border-color: var(--exit)"; btn.textContent = "sure? click once more"; }
+      else {
+        const ts = points.map((d) => d.timestamp);
+        busy = true; idle(); msg.textContent = `deleting ${ts.length}…`;
+        client.removeMany(ts).then((left) => { busy = false; msg.textContent = left ? `${left} would not delete, try again` : `cleared ${ts.length}`; idle(); });
+        return;
+      }
+      armTimer = setTimeout(idle, 4000);
+    };
+    return {
+      show() {
+        msg.textContent = "";
+        if (!unsub) unsub = client.subscribe((p, s) => { points = p; status = s; if (!arm) idle(); if (!busy && status !== "connected") msg.textContent = status; else if (!busy && /^(offline|connecting)$/.test(msg.textContent)) msg.textContent = ""; });
+      },
+      hide() { if (unsub) { unsub(); unsub = null; } clearTimeout(armTimer); idle(); },
+    };
+  });
+
   Deck.widget("dotsockets", {
     steps: 1,
     mount(el) {
@@ -152,7 +210,6 @@ ws.onmessage = (e) <span class="tk-kw">=&gt;</span> <span class="tk-fn">render</
               <div class="ds-counts"><span class="enter">enter <i>+0</i></span><span class="update">update <i>0</i></span><span class="exit">exit <i>−0</i></span></div>
               <pre>${CODE}</pre>
             </div>
-            <button class="ds-clear xray-skip" title="Deletes every dot on the shared worker">clear all dots…</button>
           </div>
         </div>`;
       el.querySelector(".ds-url").textContent = client.joinUrl || "(set LECTURE.dotsockets.joinUrl)";
@@ -246,24 +303,6 @@ ws.onmessage = (e) <span class="tk-kw">=&gt;</span> <span class="tk-fn">render</
         if (px < ox || px > ox + S || py < oy || py > oy + S) return;
         client.add(x.invert(px), y.invert(py));
       });
-
-      // clear all: three clicks, no browser dialogs
-      const clearBtn = el.querySelector(".ds-clear");
-      let arm = 0, armTimer = null;
-      clearBtn.addEventListener("click", () => {
-        clearTimeout(armTimer);
-        arm++;
-        if (arm === 1) { clearBtn.className = "ds-clear xray-skip arm1"; clearBtn.textContent = `delete all ${points.length} dots for everyone?`; }
-        else if (arm === 2) { clearBtn.className = "ds-clear xray-skip arm2"; clearBtn.textContent = "sure? click once more"; }
-        else {
-          const ts = points.map((d) => d.timestamp);
-          ts.forEach((t, i) => setTimeout(() => client.remove(t), i * 40));
-          Deck.toast(`Deleting ${ts.length} dots`);
-          arm = 0;
-        }
-        if (arm) armTimer = setTimeout(reset, 4000); else reset();
-      });
-      function reset() { arm = 0; clearBtn.className = "ds-clear xray-skip"; clearBtn.textContent = "clear all dots…"; }
 
       layout();
       return {
