@@ -3,7 +3,9 @@ window.LECTURE = {
   title: "A chart is not a picture",
   subtitle: "Interactive data visualization for the web, with D3.js",
   course: "VizPod",
-  author: "Veli Gasparovic",
+  author: "Velimir Gasparovic",
+  // Shown on the title slide (with a QR code) so students can open the deck themselves.
+  publicUrl: "fer-vizpod.pages.dev/lecture",
   date: "2026",
 
   // Live audience participation (slides "Break" and "Where are you?").
