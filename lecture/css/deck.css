@@ -461,3 +461,11 @@ header.slide-head { position: relative; }
 .head-link { position: absolute; right: 0; bottom: 0.35rem; font: 600 0.78rem var(--font-mono); text-decoration: none;
   color: var(--accent-2); border: 1px solid var(--rule); border-radius: 999px; padding: 0.3rem 0.8rem; background: var(--surface); }
 .head-link:hover { border-color: var(--accent-2); }
+
+/* phones and tablets: finger-sized step arrows on every slide (see bindTouch in deck.js) */
+body.touch-ui .stepnav { right: 12px; bottom: 10px; gap: 6px; font-size: 11px; }
+body.touch-ui .stepnav .sn-hint { display: none; }
+body.touch-ui .stepnav .sn-arrow { width: 44px; height: 44px; font-size: 24px; box-shadow: 0 1px 4px rgba(0,0,0,0.15); }
+body.touch-ui .stepnav .sn-dots { gap: 4px; }
+body.touch-ui .stepnav .sn-dot { width: 24px; height: 24px; font-size: 10px; }
+body.touch-ui .counter { bottom: 62px; }

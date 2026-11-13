@@ -269,12 +269,50 @@
   }
 
   let navSlide = -1;
+  const touchUI = matchMedia("(pointer: coarse)").matches && !matchMedia("(pointer: fine)").matches;
+
+  // ----------------------------------------------------------------- touch
+  // Swipe left / right = next / previous step, unless the finger started on something that
+  // handles its own gestures (inputs, editors, sliders, d3 drag/zoom/brush, scrollable code).
+  function bindTouch() {
+    if (isPresenter) return;
+    if (touchUI) document.body.classList.add("touch-ui");
+    let t0 = null, hinted = false;
+    const ownsGesture = (el) => {
+      for (let n = el; n && n !== document.body; n = n.parentElement) {
+        if (n.matches("input, textarea, select, button, a, [contenteditable], .cm-editor, .stepnav, .menu")) return true;
+        const cs = getComputedStyle(n);
+        if (cs.touchAction === "none" || cs.touchAction.includes("pan-y") && !cs.touchAction.includes("pan-x")) return true;
+        if (/(auto|scroll)/.test(cs.overflowX) && n.scrollWidth > n.clientWidth + 2) return true;
+      }
+      return false;
+    };
+    document.addEventListener("touchstart", (e) => {
+      if (!hinted && touchUI) {
+        hinted = true;
+        Deck.toast(innerHeight > innerWidth ? "Swipe ← → to move · turn your phone sideways for a bigger view" : "Swipe ← → to move, or use the arrows", 3200);
+      }
+      t0 = e.touches.length === 1 && !ownsGesture(e.target)
+        ? { x: e.touches[0].clientX, y: e.touches[0].clientY, t: Date.now() } : null;
+    }, { passive: true });
+    document.addEventListener("touchmove", (e) => { if (t0 && e.touches.length > 1) t0 = null; }, { passive: true });
+    document.addEventListener("touchend", (e) => {
+      if (!t0 || e.changedTouches.length !== 1) return;
+      const dx = e.changedTouches[0].clientX - t0.x, dy = e.changedTouches[0].clientY - t0.y, dt = Date.now() - t0.t;
+      t0 = null;
+      if (dt > 900 || Math.abs(dx) < 50 || Math.abs(dy) > Math.abs(dx) * 0.6) return;
+      if (dx < 0) next(); else prev();
+    }, { passive: true });
+  }
   function updateStepNav() {
     const s = Deck.slides[Deck.index], nav = document.querySelector(".stepnav");
     if (!nav) return;
-    nav.classList.toggle("show", s.steps > 0);
-    if (!s.steps) return;
+    // touch screens get the arrows on every slide (there is no keyboard); elsewhere only when a slide has steps
+    nav.classList.toggle("show", s.steps > 0 || touchUI);
+    nav.querySelector('[data-d="-1"]').disabled = touchUI ? (Deck.index === 0 && Deck.step === 0) : Deck.step === 0;
+    nav.querySelector('[data-d="1"]').disabled = Deck.index === Deck.slides.length - 1 && Deck.step >= s.steps;
     const dots = nav.querySelector(".sn-dots");
+    if (!s.steps) { dots.innerHTML = ""; navSlide = Deck.index; nav.querySelector(".sn-hint").textContent = ""; return; }
     if (navSlide !== Deck.index) {
       navSlide = Deck.index;
       dots.innerHTML = d3.range(1, s.steps + 1).map((k) => {
@@ -295,7 +333,6 @@
     nav.querySelector(".sn-hint").innerHTML = editing
       ? `editing · <kbd>Esc</kbd> to leave, then <kbd>→</kbd>`
       : last ? (Deck.index < Deck.slides.length - 1 ? "next slide" : "") : `next${nl ? ": " + nl.replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c])) : ` step ${Deck.step + 1}/${s.steps}`}`;
-    nav.querySelector('[data-d="-1"]').disabled = Deck.step === 0;
   }
 
   function updateChrome() {
@@ -327,6 +364,7 @@
 
   // -------------------------------------------------------------- keyboard
   function bindKeys() {
+    bindTouch();
     const nav = document.querySelector(".stepnav");
     nav.addEventListener("click", (e) => {
       const b = e.target.closest("button");
