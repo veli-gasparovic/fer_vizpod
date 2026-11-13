@@ -2,10 +2,10 @@
 Deck.script("selections", {
   file: "d3.html  <script>",
   rootClass: "padded",
-  stageLabel: "live document",
+  stageLabel: "<div id=\"chart\"> · live document",
   setup(root) {
     root.innerHTML = `<h1 style="font:600 4rem/1.1 var(--font-serif);margin:2rem 0 0 1rem">Hello World!</h1>
-      <p style="margin:1rem 0 0 1rem;color:var(--muted);font-size:.8rem">(root is this stage. In the original file it was the whole page.)</p>`;
+      <p style="margin:1rem 0 0 1rem;color:var(--muted);font-size:.8rem">(this stage is &lt;div id="chart"&gt;. In the original file the &lt;h1&gt; was straight in the page.)</p>`;
   },
   explain: [
     "<b>Select</b>: a CSS selector → a selection of DOM nodes.",
@@ -15,8 +15,8 @@ Deck.script("selections", {
   ],
   chunks: [
     { code: `
-      // SELECTION
-      const title = d3.select(root).select("h1");
+      // SELECTION: any CSS selector. This one: the <h1> inside <div id="chart">
+      const title = d3.select("#chart h1");
       console.log(title);
     ` },
     { at: 1, label: "modification", code: `

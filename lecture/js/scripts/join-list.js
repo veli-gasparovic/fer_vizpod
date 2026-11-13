@@ -2,7 +2,7 @@
 Deck.script("join-list", {
   file: "d3.html  createBulletedList()",
   rootClass: "padded list-stage",
-  stageLabel: "live document",
+  stageLabel: "<div id=\"chart\"> · live document",
   explain: [
     `<div class="ex"><p><b>What:</b> an array of the numbers 0–9 in random order (logged below). Nothing on the page yet.</p>
      <p><b>Why:</b> data alone draws nothing. D3's job is to connect this array to elements in the document.</p></div>`,
@@ -23,7 +23,8 @@ Deck.script("join-list", {
       const data = d3.shuffle(d3.range(10));
       console.log(data);
 
-      const ul = d3.select(root).append("ul");
+      // in the HTML: <div id="chart"></div>  (here: the live preview)
+      const ul = d3.select("#chart").append("ul");
     ` },
     { at: 1, until: 2, label: "enter + append", code: `
 

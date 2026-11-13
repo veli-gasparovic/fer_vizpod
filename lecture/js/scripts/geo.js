@@ -20,7 +20,11 @@ Deck.script("geo", {
       const geojson = topojson.feature(topology, topology.objects.hrvatska);
       console.log(geojson.features.length, "features", geojson.features[0].properties);
 
-      const svg = d3.select(root).append("svg")
+      // in the HTML: <div id="chart"></div>  (here: the live preview)
+      const chart = d3.select("#chart");
+      const width = chart.node().clientWidth;
+      const height = chart.node().clientHeight;
+      const svg = chart.append("svg")
         .attr("viewBox", [0, 0, width, height]);
     ` },
     { at: 1, label: "projection + path", code: `
@@ -56,11 +60,11 @@ Deck.script("geo", {
         f.properties.census = byName.get(f.properties.NAME_2.trim().toUpperCase()) || null;
       });
 
-      const tip = d3.select(root).append("div").attr("class", "tip");
+      const tip = chart.append("div").attr("class", "tip");
       municipalities
         .on("pointermove", (event, d) => {
           const { NAME_2, NAME_1, census } = d.properties;
-          const [mx, my] = d3.pointer(event, root);
+          const [mx, my] = d3.pointer(event, chart.node());
           tip.style("opacity", 1)
             .style("left", \`\${mx + 14}px\`).style("top", \`\${my + 14}px\`)
             .html(\`<b>\${NAME_2}</b> · \${NAME_1}<br>\` + (census

@@ -16,11 +16,15 @@ Deck.script("stripes-1", {
     { code: `
       // data = [{year: 1850, anomaly: -0.426}, …]  (HadCRUT 5.1, °C vs 1961–1990)
       console.log(data.length, "years", data[0], "…", data.at(-1));
+
+      // in the HTML: <div id="chart"></div>  (here: the live preview)
+      const chart = d3.select("#chart");
     ` },
     { until: 3, code: `
 
-      const W = width, H = height;
-      const svg = d3.select(root).append("svg")
+      const W = chart.node().clientWidth;
+      const H = chart.node().clientHeight;
+      const svg = chart.append("svg")
         .attr("width", W)
         .attr("height", H);
     ` },
@@ -28,7 +32,7 @@ Deck.script("stripes-1", {
 
       // RESPONSIVE: a fixed coordinate system, scaled by the browser
       const W = 800, H = 300;
-      const svg = d3.select(root).append("svg")
+      const svg = chart.append("svg")
         .attr("viewBox", [0, 0, W, H])
         .attr("preserveAspectRatio", "none")
         .style("width", "100%")
@@ -67,7 +71,7 @@ Deck.script("stripes-1", {
     { at: 4, label: "tooltip", code: `
 
       // DETAILS ON DEMAND
-      const tip = d3.select(root).append("div").attr("class", "tip");
+      const tip = chart.append("div").attr("class", "tip");
       stripes
         .on("pointerenter", (event, d) => {
           stripes.attr("opacity", (s) => (s === d ? 1 : 0.35));
@@ -75,7 +79,7 @@ Deck.script("stripes-1", {
             .html(\`<b>\${d.year}</b> \${d3.format("+.2f")(d.anomaly)} °C\`);
         })
         .on("pointermove", (event) => {
-          const [mx, my] = d3.pointer(event, root);
+          const [mx, my] = d3.pointer(event, chart.node());
           tip.style("left", \`\${mx + 14}px\`).style("top", \`\${my - 34}px\`);
         })
         .on("pointerleave", () => {
@@ -95,7 +99,7 @@ Deck.script("stripes-1", {
           \`first decade \${avg(data.slice(0, 10))} °C, last decade \${avg(data.slice(-10))} °C vs 1961–1990\`);
 
       // the numbers themselves: a table only screen readers see (same join!)
-      const table = d3.select(root).append("table")
+      const table = chart.append("table")
         .attr("style", "position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%)");
       table.append("caption").text("Temperature anomaly by year, °C");
       table.selectAll("tr")

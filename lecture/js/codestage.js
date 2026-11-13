@@ -200,11 +200,15 @@
       function run() {
         cleanup(); clearError();
         if (def.setup) def.setup(root);
+        // the stage is a plain <div id="chart">, so the code reads exactly as it would in a student's own page.
+        // Only the stage that is running holds the id (every slide's stage lives in the same document).
+        document.querySelectorAll("#chart").forEach((n) => { if (n !== root) n.removeAttribute("id"); });
+        root.id = "chart";
         activeStage = api;
         const args = def.args || {};
-        const names = ["d3", "root", "width", "height", "console", "setTimeout", "setInterval", "requestAnimationFrame", ...Object.keys(args)];
+        const names = ["d3", "console", "setTimeout", "setInterval", "requestAnimationFrame", ...Object.keys(args)];
         const values = [
-          d3, root, root.clientWidth, root.clientHeight, fakeConsole,
+          d3, fakeConsole,
           (f, t) => { const id = setTimeout(guard(f), t); timers.push(id); return id; },
           (f, t) => { const id = setInterval(guard(f), t); intervals.push(id); return id; },
           (f) => { const id = requestAnimationFrame(guard(f)); rafs.push(id); return id; },

@@ -11,8 +11,10 @@ Deck.script("stripes-2", {
   ],
   chunks: [
     { code: `
+      // in the HTML: <div id="chart"></div>  (here: the live preview)
+      const chart = d3.select("#chart");
       const W = 800, H = 300;
-      const svg = d3.select(root).append("svg")
+      const svg = chart.append("svg")
         .attr("viewBox", [0, 0, W, H])
         .attr("preserveAspectRatio", "none")
         .style("width", "100%").style("height", "100%");
@@ -85,7 +87,7 @@ Deck.script("stripes-2", {
     { at: 1, label: "dataset buttons", code: `
 
       // SWITCH DATASETS
-      d3.select(root).append("div").attr("class", "stage-buttons")
+      chart.append("div").attr("class", "stage-buttons")
         .selectAll("button")
         .data([datasets.global, datasets.croatia])
         .join("button")
@@ -95,7 +97,7 @@ Deck.script("stripes-2", {
     { at: 3, label: "brush a period", code: `
 
       // BRUSH: select a period, report its mean
-      const readout = d3.select(root).append("div").attr("class", "stage-readout");
+      const readout = chart.append("div").attr("class", "stage-readout");
       svg.append("g").call(
         d3.brushX()
           .extent([[0, 0], [W, H]])
