@@ -190,10 +190,7 @@ circles.<span class="tk-fn">transition</span>(t)                     <span class
 <span class="tk-com">// …and the network part is just:</span>
 ws.onmessage = (e) <span class="tk-kw">=&gt;</span> <span class="tk-fn">render</span>(JSON.<span class="tk-fn">parse</span>(e.data));`;
 
-  const NET = `<span class="tk-com">// a file that doesn't change: ONE request, one answer</span>
-<span class="tk-kw">const</span> rows = <span class="tk-kw">await</span> d3.<span class="tk-fn">csv</span>(<span class="tk-str">"population.csv"</span>);
-
-<span class="tk-com">// live data: open a connection and keep it open.</span>
+  const NET = `<span class="tk-com">// live data: open a connection and keep it open.</span>
 <span class="tk-com">// The server pushes the whole array on connect + on every change.</span>
 <span class="tk-kw">const</span> ws = <span class="tk-kw">new</span> <span class="tk-fn">WebSocket</span>(<span class="tk-str">"wss://dotsockets.swvc.workers.dev/ws"</span>);
 ws.onmessage = (e) <span class="tk-kw">=&gt;</span> {

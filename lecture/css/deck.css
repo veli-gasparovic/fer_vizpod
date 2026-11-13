@@ -366,17 +366,6 @@ pre.prompt {
   background: var(--ink); color: var(--bg); font: 0.6rem/1.35 var(--font-sans);
   padding: 0.3rem 0.55rem; border-radius: 0.3rem; white-space: nowrap;
 }
-.cs-root .stage-buttons { position: absolute; top: 0.6rem; left: 0.6rem; display: flex; gap: 0.35rem; z-index: 6; }
-.cs-root .stage-buttons button {
-  border: 1px solid var(--rule); background: var(--surface); color: var(--ink); cursor: pointer;
-  border-radius: 999px; padding: 0.22rem 0.7rem; font-size: 0.6rem; box-shadow: 0 1px 4px rgba(0,0,0,0.12);
-}
-.cs-root .stage-buttons button:hover { border-color: var(--ink-2); }
-.cs-root .stage-readout {
-  position: absolute; bottom: 0.6rem; left: 0.6rem; z-index: 6; pointer-events: none;
-  background: var(--ink); color: var(--bg); font: 600 0.65rem var(--font-mono); padding: 0.25rem 0.6rem; border-radius: 0.3rem;
-}
-.cs-root .stage-readout:empty { display: none; }
 .cs-root svg { display: block; }
 .cs-root svg text { fill: var(--ink-2); }
 .cs-root .axis-label { font-size: 0.6rem; }

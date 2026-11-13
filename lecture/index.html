@@ -74,7 +74,7 @@
       <li><b>Step 0:</b> they look identical at this size. That's the trap.</li>
       <li><b>Step 1, zoom in:</b> the raster drops to 16 × 16 and you see the pixel grid: staircase edges, blurry anti-aliasing. The vector shows its geometry: corners, centre, radius, end points. Drag the resolution slider; hover a pixel.</li>
       <li><b>Step 2, what is stored:</b> raster = 4 bytes (R, G, B, A) per pixel, and nothing else; there is no "circle" in a PNG. Vector = three lines of markup, same size at any zoom. Hover a shape on the right: its line lights up.</li>
-      <li><b>Step 3, trade-offs:</b> vector for charts, maps, text; raster wins for photos and for very many marks (we come back to that with canvas, slide 29).</li>
+      <li><b>Step 3, trade-offs:</b> vector for charts, maps, text; raster wins for photos and for very many marks (we come back to that with canvas, slide 28).</li>
     </ul>
   </aside>
 </section>
@@ -148,7 +148,7 @@
   </div>
   <aside class="notes">
     <p><b>4 min.</b> Four dates that explain why "interactive" isn't a gimmick. Let them <i>feel</i> each one for 30–40 s before you name it.</p>
-    <p><b>1 Shneiderman:</b> drag the box over the stripes (zoom), hover a bar (details). "Overview first" is the stripes; the full version is slide 27.</p>
+    <p><b>1 Shneiderman:</b> drag the box over the stripes (zoom), hover a bar (details). "Overview first" is the stripes; the full version is slide 26.</p>
     <p><b>2 Heer &amp; Robertson:</b> it autoplays. Ask "where did the red bar go?" Left is hopeless, right is easy. That's their experiment in 3 seconds, and it's why D3 has transitions and keys (slide 22 does it with real data).</p>
     <p><b>3 Bret Victor:</b> drag the baseline box on the stripes all the way left (1850), then right (1990s): the same year goes from "very warm" to "barely warm", and the stripes recolour. A sentence you can argue with. The whole deck is meant to be this.</p>
     <p><b>4 512 Paths:</b> starts at Obama 431 of 512 paths. Click FL once (Obama): 255 of 256, game over. Click FL again (Romney): Obama still wins 176 of 256. Click OH twice (Romney too): 60 vs 64, a coin toss. That was the NYT's point: Romney needed nearly everything. Each branch is a data element, so fixing a state is enter/exit. 2012 electoral votes; safe states 237–191.</p>
@@ -188,7 +188,7 @@
   </div>
   <aside class="notes">
     <p><b>3 min, video</b> (Fireship, "SVG Explained in 100 Seconds", 2:20 long, starts at 0:04). Click ▶, then click outside the video to get the arrow keys back. Leaving the slide pauses it.</p>
-    <p>Before playing: "the timeline said the standards won. Here is the one we will use all day." Afterwards, point at three things to remember: elements + attributes (D3 selects and modifies exactly these), <code>viewBox</code> (responsive stripes later), and the path <code>d</code> string (slide 19 generates it).</p>
+    <p>Before playing: "the timeline said the standards won. Here is the one we will use all day." Afterwards, point at three things to remember: elements + attributes (D3 selects and modifies exactly these), <code>viewBox</code> (responsive stripes later), and the path <code>d</code> string (slide 16 generates it).</p>
     <p>No network: skip it, the link is under the frame.</p>
   </aside>
 </section>
@@ -256,54 +256,6 @@
 </section>
 
 <!-- 11 -->
-<section class="slide" id="mine" data-block="1" data-minutes="2" data-title="My D3: the Resilience Index">
-  <div class="slide-inner">
-    <header class="slide-head">
-      <div class="kicker">Bridge · what D3 is for, in practice</div>
-      <h2>One of mine: the World Risk Poll Resilience Index</h2>
-    </header>
-    <div class="widget grow" data-widget="embed" data-opt='{"src": "https://resilience.pages.dev/", "label": "World Risk Poll Resilience Index"}'></div>
-  </div>
-  <aside class="notes">
-    <p><b>2 min, live.</b> A real project, not a tutorial chart: bespoke layout, animated transitions between years, filters and highlights. Exactly the "bespoke, novel, explorable" corner from the previous slide.</p>
-    <p>Click inside the page to use it (the frame gets a red outline: the keyboard now belongs to the page). Click anywhere outside the frame to get the arrow keys back.</p>
-    <p>If the network is down, skip it: the link opens it in a new tab later.</p>
-  </aside>
-</section>
-
-<!-- 12 -->
-<section class="slide" id="lighthouses" data-block="1" data-minutes="2" data-title="My D3: Lighthouses of Croatia">
-  <div class="slide-inner">
-    <header class="slide-head">
-      <div class="kicker">Bridge · what D3 is for, in practice</div>
-      <h2>Lighthouses of Croatia: every light's real range, to scale</h2>
-    </header>
-    <div class="widget grow" data-widget="embed" data-opt='{"src": "https://svjetionici.pages.dev/", "label": "Lighthouses of Croatia"}'></div>
-  </div>
-  <aside class="notes">
-    <p><b>2 min, live.</b> Every lighthouse on the Croatian coast. Each glow's radius is that light's official range in nautical miles, converted to pixels through the map projection, so the circles are true to scale on the map.</p>
-    <p>Hover a light: the coast around it is revealed (a spotlight) and you get its name and description. It's an older piece (D3 v5), but the ideas are the same ones we use today: a geo projection, a scale from data to radius, one circle per datum.</p>
-    <p>Click inside the page to use it; click outside the frame to get the arrow keys back.</p>
-  </aside>
-</section>
-
-<!-- 13 -->
-<section class="slide" id="pantovcak" data-block="1" data-minutes="2" data-title="My D3: Pantovčak 2024">
-  <div class="slide-inner">
-    <header class="slide-head">
-      <div class="kicker">Bridge · what D3 is for, in practice</div>
-      <h2>Pantovčak 2024: a map that turns into a scatter plot</h2>
-    </header>
-    <div class="widget grow" data-widget="embed" data-opt='{"src": "https://pantovcak2024.pages.dev/", "label": "Pantovčak 2024 election map"}'></div>
-  </div>
-  <aside class="notes">
-    <p><b>2 min, live.</b> The 2024 presidential election (Milanović vs Primorac), one shape per municipality, coloured with a diverging red–blue scale by who won and by how much.</p>
-    <p>Let it play as the slide opens, about 15 seconds. First the municipalities morph from their real borders into circles sized by population (flubber's <code>toCircle</code> inside a D3 transition, staggered by rank). Then the circles fly into a scatter plot: university-educated share (x) against income per person (y). Same data, same marks, moved from geography to statistics. It plays once per load; open it from the link to replay.</p>
-    <p>Then: zoom and pan, search a municipality in the box, hover for the vote counts.</p>
-  </aside>
-</section>
-
-<!-- 14 -->
 <section class="slide" id="selections" data-block="1" data-minutes="3" data-title="Live: select, modify, transition, listen">
   <div class="slide-inner">
     <header class="slide-head"><div class="kicker">What · selections · live code</div><h2>Select → modify → transition → listen</h2></header>
@@ -316,7 +268,7 @@
   </aside>
 </section>
 
-<!-- 15 -->
+<!-- 12 -->
 <section class="slide" id="join-list" data-block="1" data-minutes="3" data-title="Live: binding data">
   <div class="slide-inner">
     <header class="slide-head"><div class="kicker">What · the data join · live code</div><h2>Bind an array to the document</h2></header>
@@ -328,7 +280,7 @@
   </aside>
 </section>
 
-<!-- 16 -->
+<!-- 13 -->
 <section class="slide" id="joinviz" data-block="1" data-minutes="5" data-title="The data join, visualized">
   <div class="slide-inner">
     <header class="slide-head"><div class="kicker">What · the data join</div><h2>Diff your data against the DOM</h2></header>
@@ -344,7 +296,7 @@
   </aside>
 </section>
 
-<!-- 17 -->
+<!-- 14 -->
 <section class="slide" id="scales" data-block="1" data-minutes="4" data-title="Scales: data space → pixel space">
   <div class="slide-inner">
     <header class="slide-head"><div class="kicker">What · scales</div><h2>A scale is a function from data space to visual space</h2></header>
@@ -356,7 +308,7 @@
   </aside>
 </section>
 
-<!-- 18 -->
+<!-- 15 -->
 <section class="slide" id="render" data-block="1" data-minutes="4" data-title="Anatomy of a chart: scales, axes, marks, shapes">
   <div class="slide-inner">
     <header class="slide-head"><div class="kicker">What · from scales to a chart</div><h2>Scales → axes → marks → shapes</h2></header>
@@ -374,7 +326,7 @@
   </aside>
 </section>
 
-<!-- 19 -->
+<!-- 16 -->
 <section class="slide" id="shapes" data-block="1" data-minutes="3" data-title="Shape generators: data → path d">
   <div class="slide-inner">
     <header class="slide-head"><div class="kicker">What · shape generators</div><h2>Data in, a path string <code>d</code> out</h2></header>
@@ -394,7 +346,55 @@
     <div class="widget bleed-fill" data-widget="break"></div>
   </div>
   <aside class="notes">
-    <p>Countdown is clickable (pause, ±1 min). Students can tap on their phones; their dots appear live. Over the break, the dots are the data. After the break we dissect what they were playing with.</p>
+    <p>Countdown is clickable (pause, ±1 min). Students can tap on their phones; their dots appear live. Over the break, the dots are the data. After the break: three real projects, then we dissect what they were playing with.</p>
+  </aside>
+</section>
+
+<!-- 17 -->
+<section class="slide" id="mine" data-block="2" data-minutes="2" data-title="My D3: the Resilience Index">
+  <div class="slide-inner">
+    <header class="slide-head">
+      <div class="kicker">Warm-up · what D3 is for, in practice</div>
+      <h2>One of mine: the World Risk Poll Resilience Index</h2>
+    </header>
+    <div class="widget grow" data-widget="embed" data-opt='{"src": "https://resilience.pages.dev/", "label": "World Risk Poll Resilience Index"}'></div>
+  </div>
+  <aside class="notes">
+    <p><b>2 min, live.</b> A real project, not a tutorial chart: bespoke layout, animated transitions between years, filters and highlights. Exactly the "bespoke, novel, explorable" corner from the "when not to use D3" slide. These three open block 2: what you can build, before we build.</p>
+    <p>Click inside the page to use it (the frame gets a red outline: the keyboard now belongs to the page). Click anywhere outside the frame to get the arrow keys back.</p>
+    <p>If the network is down, skip it: the link opens it in a new tab later.</p>
+  </aside>
+</section>
+
+<!-- 18 -->
+<section class="slide" id="lighthouses" data-block="2" data-minutes="2" data-title="My D3: Lighthouses of Croatia">
+  <div class="slide-inner">
+    <header class="slide-head">
+      <div class="kicker">Warm-up · what D3 is for, in practice</div>
+      <h2>Lighthouses of Croatia: every light's real range, to scale</h2>
+    </header>
+    <div class="widget grow" data-widget="embed" data-opt='{"src": "https://svjetionici.pages.dev/", "label": "Lighthouses of Croatia"}'></div>
+  </div>
+  <aside class="notes">
+    <p><b>2 min, live.</b> Every lighthouse on the Croatian coast. Each glow's radius is that light's official range in nautical miles, converted to pixels through the map projection, so the circles are true to scale on the map.</p>
+    <p>Hover a light: the coast around it is revealed (a spotlight) and you get its name and description. It's an older piece (D3 v5), but the ideas are the same ones we use today: a geo projection, a scale from data to radius, one circle per datum.</p>
+    <p>Click inside the page to use it; click outside the frame to get the arrow keys back.</p>
+  </aside>
+</section>
+
+<!-- 19 -->
+<section class="slide" id="pantovcak" data-block="2" data-minutes="2" data-title="My D3: Pantovčak 2024">
+  <div class="slide-inner">
+    <header class="slide-head">
+      <div class="kicker">Warm-up · what D3 is for, in practice</div>
+      <h2>Pantovčak 2024: a map that turns into a scatter plot</h2>
+    </header>
+    <div class="widget grow" data-widget="embed" data-opt='{"src": "https://pantovcak2024.pages.dev/", "label": "Pantovčak 2024 election map"}'></div>
+  </div>
+  <aside class="notes">
+    <p><b>2 min, live.</b> The 2024 presidential election (Milanović vs Primorac), one shape per municipality, coloured with a diverging red–blue scale by who won and by how much.</p>
+    <p>Let it play as the slide opens, about 15 seconds. First the municipalities morph from their real borders into circles sized by population (flubber's <code>toCircle</code> inside a D3 transition, staggered by rank). Then the circles fly into a scatter plot: university-educated share (x) against income per person (y). Same data, same marks, moved from geography to statistics. It plays once per load; open it from the link to replay.</p>
+    <p>Then: zoom and pan, search a municipality in the box, hover for the vote counts.</p>
   </aside>
 </section>
 
@@ -412,7 +412,7 @@
     <p class="muted">Clearing the dots: "clear all dots…" in this presenter window's bottom bar (three clicks). It is not on the public slide.</p>
     <p><b>3 min.</b> x = JavaScript experience, y = dataviz experience. Each tap goes as a POST to a Cloudflare worker, which broadcasts all the points over a WebSocket to every screen. Each screen runs one data join keyed by timestamp.</p>
     <p><b>Step 1:</b> reveal the render function: enter (grow in), update (move), exit (shrink out), the same three sets as before the break, now driven by a network.</p>
-    <p><b>Step 2, where the data comes from:</b> nothing is "loaded". Your phone sends a tap with an HTTP <code>POST</code> to a Cloudflare worker; this screen keeps a <code>WebSocket</code> open, and the worker pushes the whole array (as JSON) to every screen on every change. Every push makes the status dot ring and sends a green packet down the WebSocket arrow to "every screen", and the grey box logs it (time, number of points, bytes): tap again and watch it happen. Contrast with <code>d3.csv(url)</code>: one request, one answer, done, which is what you use for a file that doesn't change (the stripes, the map).</p>
+    <p><b>Step 2, where the data comes from:</b> nothing is "loaded". Your phone sends a tap with an HTTP <code>POST</code> to a Cloudflare worker; this screen keeps a <code>WebSocket</code> open, and the worker pushes the whole array (as JSON) to every screen on every change. Every push makes the status dot ring and sends a green packet down the WebSocket arrow to "every screen", and the grey box logs it (time, number of points, bytes): tap again and watch it happen.</p>
   </aside>
 </section>
 
@@ -456,9 +456,9 @@
 </section>
 
 <!-- 23 -->
-<section class="slide" id="stripes-1" data-block="2" data-minutes="8" data-title="Live: stripes I (encode, responsive, tooltip)">
+<section class="slide" id="stripes-1" data-block="2" data-minutes="8" data-title="Live: stripes (encode, responsive, tooltip)">
   <div class="slide-inner">
-    <header class="slide-head"><div class="kicker">How · live code, part 1</div><h2>Stripes I: encode → make it responsive → details on demand</h2></header>
+    <header class="slide-head"><div class="kicker">How · live code</div><h2>Stripes: encode → make it responsive → details on demand</h2></header>
     <div class="widget grow" data-widget="code" data-script="stripes-1" data-layout="stacked"></div>
   </div>
   <aside class="notes">
@@ -468,7 +468,6 @@
       <li>Diverging colour scale: <code>scaleDiverging</code> + <code>interpolateRdBu</code>. Ask: why is the domain reversed?</li>
       <li>Responsive: the fixed <code>width</code>/<code>height</code> get commented out and replaced by <code>viewBox</code> + <code>preserveAspectRatio="none"</code>. <b>Drag the stage's bottom-right corner</b> to resize: no re-render, because it's vector. The payoff of the "why".</li>
       <li>Tooltip on <code>pointerenter</code>: details-on-demand (Shneiderman).</li>
-      <li>Accessibility: <code>role="img"</code> turns the SVG into one picture for a screen reader; its children (and any per-stripe <code>&lt;title&gt;</code>) are skipped. So the <code>aria-label</code> carries the message with real numbers, and a visually hidden <code>&lt;table&gt;</code> (the same join, different elements) carries the data.</li>
     </ol>
   </aside>
 </section>
@@ -486,23 +485,6 @@
 </section>
 
 <!-- 25 -->
-<section class="slide" id="stripes-2" data-block="2" data-minutes="6" data-title="Live: stripes II (join, transition, line)">
-  <div class="slide-inner">
-    <header class="slide-head"><div class="kicker">How · live code, part 2</div><h2>Stripes II: switch datasets with join + transition, then overlay a line</h2></header>
-    <div class="widget grow" data-widget="code" data-script="stripes-2" data-layout="stacked"></div>
-  </div>
-  <aside class="notes">
-    <p><b>6 min.</b> Refactored into an <code>update(series)</code> function so it can run more than once.</p>
-    <ol>
-      <li>Global ↔ Croatia buttons with <code>.join()</code> + key by year: stripes recolour in place. Croatia has fewer years (to 2020), so the exit set is non-empty. Watch them leave.</li>
-      <li>Line overlay with <code>d3.line()</code> + a linear y scale (Wikipedia's "line chart superimposed on stripes").</li>
-      <li>Brush a period → mean anomaly (stretch goal; same pattern as <code>brush.js</code>).</li>
-    </ol>
-    <p>Croatia is land-only and much more variable than the global mean (land + ocean). Ask why the colours are so much stronger.</p>
-  </aside>
-</section>
-
-<!-- 26 -->
 <section class="slide" id="mantra" data-block="2" data-minutes="4" data-title="Overview, zoom & filter, details-on-demand">
   <div class="slide-inner">
     <header class="slide-head"><div class="kicker">How · interaction behaviours</div><h2 class="mantra-title"><span data-m="overview">Overview first,</span> <span data-m="zoom">zoom and filter,</span> <span data-m="details">then details-on-demand.</span></h2></header>
@@ -514,7 +496,7 @@
   </aside>
 </section>
 
-<!-- 27 -->
+<!-- 26 -->
 <section class="slide" id="geo" data-block="2" data-minutes="5" data-title="Live: Croatia (geo)">
   <div class="slide-inner">
     <header class="slide-head"><div class="kicker">How · layouts &amp; geography · live code</div><h2>556 municipalities, one projection, one join</h2></header>
@@ -526,7 +508,7 @@
   </aside>
 </section>
 
-<!-- 28 -->
+<!-- 27 -->
 <section class="slide" id="renderers" data-block="2" data-minutes="2" data-title="SVG vs Canvas">
   <div class="slide-inner">
     <header class="slide-head"><div class="kicker">How · choosing a renderer</div><h2>When the document gets too big</h2></header>
@@ -538,7 +520,7 @@
   </aside>
 </section>
 
-<!-- 29 -->
+<!-- 28 -->
 <section class="slide" id="takeaways" data-block="2" data-minutes="1" data-title="Three takeaways">
   <div class="slide-inner">
     <header class="slide-head"><div class="kicker">Wrap-up</div><h2>Three things to keep</h2></header>
@@ -551,32 +533,20 @@
   <aside class="notes"><p><b>1 min.</b></p></aside>
 </section>
 
-<!-- 30 -->
-<section class="slide" id="resources" data-block="2" data-minutes="1" data-title="Challenge & resources">
+<!-- 29 -->
+<section class="slide" id="resources" data-block="2" data-minutes="1" data-title="Resources">
   <div class="slide-inner">
-    <header class="slide-head"><div class="kicker">Your turn</div><h2>Challenge: show <i>your</i> stripes</h2></header>
-    <div class="cols-2 grow">
-      <div class="col">
-        <ul class="clean">
-          <li>Pick a country or city (<a href="https://showyourstripes.info">showyourstripes.info</a>, Berkeley Earth, or DHMZ for Zagreb-Grič).</li>
-          <li>Build stripes + line overlay with D3 v7.9, using <code>selection.join</code> with a key.</li>
-          <li>Add a brush that reports the mean anomaly of the selected period.</li>
-          <li>Make it responsive (<code>viewBox</code>) and accessible (an <code>aria-label</code> with the message, a table with the numbers).</li>
-          <li>Use AI if you like, but annotate every line you didn't write yourself and why it's correct.</li>
-        </ul>
-      </div>
-      <div class="col small">
-        <h3>Read next</h3>
-        <ul class="clean">
-          <li>Bostock: "Thinking with Joins" (2012), "How Selections Work" (2013). Concepts, not syntax (they predate <code>join()</code>).</li>
-          <li><a href="https://d3js.org/getting-started">d3js.org: Getting started</a> (incl. React/Svelte/Vue)</li>
-          <li>Observable: "Learn D3" notebooks</li>
-          <li>Amelia Wattenberger: <i>Fullstack D3 and Data Visualization</i>; "How to learn D3.js"</li>
-          <li>Curran Kelleher's free dataviz course (YouTube)</li>
-          <li>The paper: Bostock, Ogievetsky &amp; Heer, "D³: Data-Driven Documents", IEEE TVCG 17(12), 2011</li>
-        </ul>
-        <p class="muted">This deck is plain HTML, CSS and D3 v7.9, with no build step. Press <kbd>X</kbd> anywhere and read its data.</p>
-      </div>
+    <header class="slide-head"><div class="kicker">Where to go next</div><h2>Read next</h2></header>
+    <div class="grow">
+      <ul class="clean">
+        <li>Bostock: "Thinking with Joins" (2012), "How Selections Work" (2013). Concepts, not syntax (they predate <code>join()</code>).</li>
+        <li><a href="https://d3js.org/getting-started" target="_blank" rel="noopener">d3js.org: Getting started</a> (incl. React/Svelte/Vue)</li>
+        <li>Observable: "Learn D3" notebooks</li>
+        <li>Amelia Wattenberger: <i>Fullstack D3 and Data Visualization</i>; "How to learn D3.js"</li>
+        <li>Curran Kelleher's free dataviz course (YouTube)</li>
+        <li>The paper: Bostock, Ogievetsky &amp; Heer, "D³: Data-Driven Documents", IEEE TVCG 17(12), 2011</li>
+      </ul>
+      <p class="muted" style="margin-top:1.6rem">This deck is plain HTML, CSS and D3 v7.9, with no build step. Press <kbd>X</kbd> anywhere and read its data.</p>
     </div>
   </div>
   <aside class="notes"><p><b>1 min.</b> Check resource URLs before the lecture.</p></aside>
@@ -622,7 +592,6 @@
 <script src="js/scripts/selections.js"></script>
 <script src="js/scripts/join-list.js"></script>
 <script src="js/scripts/stripes-1.js"></script>
-<script src="js/scripts/stripes-2.js"></script>
 <script src="js/scripts/geo.js"></script>
 </body>
 </html>
