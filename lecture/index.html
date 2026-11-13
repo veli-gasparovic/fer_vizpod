@@ -412,6 +412,7 @@
     <p class="muted">Clearing the dots: "clear all dots…" in this presenter window's bottom bar (three clicks). It is not on the public slide.</p>
     <p><b>3 min.</b> x = JavaScript experience, y = dataviz experience. Each tap goes as a POST to a Cloudflare worker, which broadcasts all the points over a WebSocket to every screen. Each screen runs one data join keyed by timestamp.</p>
     <p><b>Step 1:</b> reveal the render function: enter (grow in), update (move), exit (shrink out), the same three sets as before the break, now driven by a network.</p>
+    <p><b>Step 2, where the data comes from:</b> nothing is "loaded". Your phone sends a tap with an HTTP <code>POST</code> to a Cloudflare worker; this screen keeps a <code>WebSocket</code> open, and the worker pushes the whole array (as JSON) to every screen on every change. Every push makes the status dot ring and sends a green packet down the WebSocket arrow to "every screen", and the grey box logs it (time, number of points, bytes): tap again and watch it happen. Contrast with <code>d3.csv(url)</code>: one request, one answer, done, which is what you use for a file that doesn't change (the stripes, the map).</p>
   </aside>
 </section>
 

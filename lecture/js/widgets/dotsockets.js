@@ -12,6 +12,7 @@
   window.DotSocketsClient = window.DotSocketsClient || (function () {
     const cfg = (window.LECTURE || {}).dotsockets || {};
     const subs = new Set();
+    const msgSubs = new Set();    // network log: fn(bytes, count) for every WebSocket message
     let ws = null, points = [], status = "offline", backoff = 1000, timer = null;
     // Deletes: the worker broadcasts the full array after every change, and concurrent DELETEs can
     // overwrite each other on the worker. So deletes go out one at a time, the dots stay hidden while
@@ -38,6 +39,7 @@
           const msg = JSON.parse(evt.data);
           if (Array.isArray(msg)) {
             raw = msg.filter(valid);
+            msgSubs.forEach((fn) => { try { fn(evt.data.length, raw.length); } catch (e) {} });
             for (const ts of pending) if (!has(raw, ts)) pending.delete(ts); // confirmed gone
             points = visible(); notify();
           }
@@ -57,6 +59,8 @@
       get points() { return points; },
       get status() { return status; },
       joinUrl: cfg.joinUrl || "",
+      /** fn(bytes, count) for every message the server pushes; returns an unsubscribe function */
+      onMessage(fn) { msgSubs.add(fn); return () => msgSubs.delete(fn); },
       /** fn(points, status); returns an unsubscribe function */
       subscribe(fn) {
         subs.add(fn);
@@ -135,6 +139,30 @@
     .ds-counts span i { font-style: normal; font-weight: 700; }
     .ds-counts .enter.flash { background: var(--enter); color: #fff; transition: none; }
     .ds-counts .exit.flash { background: var(--exit); color: #fff; transition: none; }
+    .ds-net { display: none; flex-direction: column; gap: 0.55rem; min-height: 0; }
+    .ds-net.show { display: flex; animation: ds-in .4s ease; }
+    @keyframes ds-in { from { opacity: 0; transform: translateY(0.4rem); } }
+    .ds-flow { display: flex; align-items: center; gap: 0.35rem; font: 0.56rem var(--font-mono); color: var(--ink-2); flex-wrap: wrap; }
+    .ds-flow b { font: 600 0.62rem var(--font-sans); color: var(--ink); background: var(--surface); border: 1px solid var(--rule); border-radius: 0.35rem; padding: 0.2rem 0.5rem; }
+    .ds-flow span { position: relative; display: inline-flex; flex-direction: column; align-items: center; line-height: 1.1; }
+    .ds-flow b { transition: box-shadow .6s, border-color .6s; }
+    .ds-flow b.glow { border-color: var(--enter); box-shadow: 0 0 0 0.25rem color-mix(in srgb, var(--enter) 30%, transparent); transition: none; }
+    .ds-flow .pk { position: absolute; left: 0; bottom: 0.18em; width: 0.5rem; height: 0.5rem; margin-left: -0.25rem; border-radius: 50%;
+      background: var(--enter); box-shadow: 0 0 0.4rem var(--enter); opacity: 0; pointer-events: none; }
+    .ds-flow .pk.go { animation: ds-pk .55s ease-in forwards; }
+    @keyframes ds-pk { 0% { left: 0; opacity: 1; } 90% { opacity: 1; } 100% { left: 100%; opacity: 0; } }
+    .ds-behind { font-size: 0.62rem; line-height: 1.45; color: var(--ink-2); margin: 0; }
+    .ds-behind b { color: var(--ink); }
+    .ds-dot.ping { animation: ds-ping 0.9s ease-out; }
+    @keyframes ds-ping { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--enter) 75%, transparent); } 100% { box-shadow: 0 0 0 1.1rem transparent; } }
+    .ds-flow span::after { content: "──────▶"; letter-spacing: -0.12em; color: var(--muted); }
+    .ds-net pre { margin: 0; background: var(--code-bg); color: var(--code-ink); border-radius: 0.5rem; padding: 0.6rem 0.85rem;
+      font: 0.58rem/1.55 var(--font-mono); overflow: auto; white-space: pre; }
+    .ds-log { font: 0.54rem/1.6 var(--font-mono); color: var(--ink-2); background: var(--surface); border: 1px solid var(--rule); border-radius: 0.45rem; padding: 0.35rem 0.7rem; min-height: 4.4em; flex: none; }
+    .ds-log div { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .ds-log div:first-child { color: var(--ink); }
+    .ds-log .fresh { animation: ds-fresh 1.2s ease; }
+    @keyframes ds-fresh { from { background: color-mix(in srgb, var(--enter) 30%, transparent); } }
     .ds-chart .quad { font: italic 0.62rem var(--font-serif); fill: var(--muted); }
     .ds-chart .axis-label { font: 600 0.58rem var(--font-sans); fill: var(--ink-2); letter-spacing: 0.03em; }
     .ds-chart .tick-label { font: 0.52rem var(--font-sans); fill: var(--muted); }
@@ -161,6 +189,24 @@ circles.<span class="tk-fn">transition</span>(t)                     <span class
 
 <span class="tk-com">// …and the network part is just:</span>
 ws.onmessage = (e) <span class="tk-kw">=&gt;</span> <span class="tk-fn">render</span>(JSON.<span class="tk-fn">parse</span>(e.data));`;
+
+  const NET = `<span class="tk-com">// a file that doesn't change: ONE request, one answer</span>
+<span class="tk-kw">const</span> rows = <span class="tk-kw">await</span> d3.<span class="tk-fn">csv</span>(<span class="tk-str">"population.csv"</span>);
+
+<span class="tk-com">// live data: open a connection and keep it open.</span>
+<span class="tk-com">// The server pushes the whole array on connect + on every change.</span>
+<span class="tk-kw">const</span> ws = <span class="tk-kw">new</span> <span class="tk-fn">WebSocket</span>(<span class="tk-str">"wss://dotsockets.swvc.workers.dev/ws"</span>);
+ws.onmessage = (e) <span class="tk-kw">=&gt;</span> {
+  <span class="tk-kw">const</span> points = JSON.<span class="tk-fn">parse</span>(e.data);   <span class="tk-com">// [{x, y, timestamp}, …]</span>
+  <span class="tk-fn">render</span>(points);                       <span class="tk-com">// the join from step 1</span>
+};
+
+<span class="tk-com">// your phone (join.html) sends a tap as an HTTP POST</span>
+<span class="tk-fn">fetch</span>(<span class="tk-str">"https://dotsockets.swvc.workers.dev/points"</span>, {
+  method: <span class="tk-str">"POST"</span>,
+  headers: { <span class="tk-str">"Content-Type"</span>: <span class="tk-str">"application/json"</span> },
+  body: JSON.<span class="tk-fn">stringify</span>({ x, y, timestamp: Date.<span class="tk-fn">now</span>() }),
+});`;
 
   // "clear all dots" lives only in the presenter window (the public deck has no delete button).
   // Three clicks, no browser dialogs.
@@ -194,7 +240,7 @@ ws.onmessage = (e) <span class="tk-kw">=&gt;</span> <span class="tk-fn">render</
   });
 
   Deck.widget("dotsockets", {
-    steps: 1,
+    steps: 2,
     mount(el) {
       const client = window.DotSocketsClient;
       el.innerHTML = `
@@ -210,6 +256,12 @@ ws.onmessage = (e) <span class="tk-kw">=&gt;</span> <span class="tk-fn">render</
               <div class="ds-counts"><span class="enter">enter <i>+0</i></span><span class="update">update <i>0</i></span><span class="exit">exit <i>−0</i></span></div>
               <pre>${CODE}</pre>
             </div>
+            <div class="ds-net">
+              <div class="ds-flow"><b>your phone</b><span>POST</span><b class="fw-worker">Cloudflare worker</b><span>WebSocket<i class="pk"></i></span><b class="fw-screen">every screen</b></div>
+              <p class="ds-behind"><b>Behind the scenes:</b> your tap goes to the worker as a POST; the worker saves it and pushes the whole list down an open WebSocket to every screen in the room. Each push (green flash, log below) re-runs the join.</p>
+              <pre>${NET}</pre>
+              <div class="ds-log"><div class="muted">← waiting for the server to push…</div></div>
+            </div>
           </div>
         </div>`;
       el.querySelector(".ds-url").textContent = client.joinUrl || "(set LECTURE.dotsockets.joinUrl)";
@@ -217,6 +269,27 @@ ws.onmessage = (e) <span class="tk-kw">=&gt;</span> <span class="tk-fn">render</
       const chartBox = el.querySelector(".ds-chart");
       const svg = d3.select(chartBox).select("svg");
       const codeBox = el.querySelector(".ds-code");
+      const netBox = el.querySelector(".ds-net"), logBox = el.querySelector(".ds-log");
+      let unMsg = null;
+      const pk = el.querySelector(".ds-flow .pk"), fwWorker = el.querySelector(".fw-worker"), fwScreen = el.querySelector(".fw-screen");
+      const restart = (node, cls) => { node.classList.remove(cls); void node.offsetWidth; node.classList.add(cls); };
+      const pulse = () => {
+        restart(el.querySelector(".ds-dot"), "ping");
+        restart(fwWorker, "glow"); setTimeout(() => fwWorker.classList.remove("glow"), 50);
+        restart(pk, "go");
+        setTimeout(() => { restart(fwScreen, "glow"); setTimeout(() => fwScreen.classList.remove("glow"), 50); }, 520);
+      };
+      const logMsg = (bytes, n) => {
+        pulse();
+        const t = new Date().toTimeString().slice(0, 8);
+        const kb = bytes >= 1024 ? (bytes / 1024).toFixed(1) + " KB" : bytes + " bytes";
+        const row = document.createElement("div");
+        row.className = "fresh";
+        row.textContent = `${t}  ← ${n} ${n === 1 ? "point" : "points"} · ${kb} of JSON`;
+        logBox.querySelector(".muted")?.remove();
+        logBox.prepend(row);
+        while (logBox.children.length > 3) logBox.lastChild.remove();
+      };
       const nEl = el.querySelector(".ds-n"), labelEl = el.querySelector(".ds-label"), dotEl = el.querySelector(".ds-dot");
       const counts = { enter: el.querySelector(".ds-counts .enter"), update: el.querySelector(".ds-counts .update"), exit: el.querySelector(".ds-counts .exit") };
 
@@ -285,7 +358,7 @@ ws.onmessage = (e) <span class="tk-kw">=&gt;</span> <span class="tk-fn">render</
 
         nEl.textContent = points.length;
         labelEl.textContent = `${points.length === 1 ? "dot" : "dots"} · ${status}`;
-        dotEl.className = "ds-dot " + status;
+        dotEl.classList.remove("connected", "connecting", "offline"); dotEl.classList.add(status);
         offlineText.text(points.length ? "" : status === "connected" ? "waiting for the first tap…" : status === "connecting" ? "connecting…" : "offline: no connection to the dotsockets worker");
 
         if (animate) {
@@ -306,10 +379,13 @@ ws.onmessage = (e) <span class="tk-kw">=&gt;</span> <span class="tk-fn">render</
 
       layout();
       return {
-        enter() { if (!unsub) unsub = client.subscribe((p, s) => { points = p; status = s; render(true); }); },
-        leave() { if (unsub) { unsub(); unsub = null; } },
+        enter() {
+          if (!unMsg) unMsg = client.onMessage(logMsg);
+          if (!unsub) unsub = client.subscribe((p, s) => { points = p; status = s; render(true); });
+        },
+        leave() { if (unsub) { unsub(); unsub = null; } if (unMsg) { unMsg(); unMsg = null; } },
         resize: layout,
-        step(n) { codeBox.classList.toggle("show", n >= 1); },
+        step(n) { codeBox.classList.toggle("show", n === 1); codeBox.style.display = n >= 2 ? "none" : ""; netBox.classList.toggle("show", n >= 2); },
       };
     },
   });
