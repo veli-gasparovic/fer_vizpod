@@ -215,11 +215,13 @@
     <header class="slide-head">
       <div class="kicker">Bridge · what D3 actually is</div>
       <h2>D3 is not a charting library. It's 30 small ones.</h2>
+      <a class="head-link" href="https://d3js.org/" target="_blank" rel="noopener">d3js.org ↗</a>
     </header>
     <div class="widget grow" data-widget="toolbox"></div>
   </div>
   <aside class="notes">
-    <p><b>2 min.</b> Since v4 (June 2016): "There isn't a 'core' D3 anymore; there's just a default bundle" of about thirty microlibraries. This circle-packing is <code>d3.hierarchy</code> + <code>d3.pack</code>, so D3 is drawing its own table of contents.</p>
+    <p><b>2 min.</b> The <b>d3js.org ↗</b> link (top right) opens the docs in a new tab, if you want to show the real site.</p>
+    <p>Since v4 (June 2016): "There isn't a 'core' D3 anymore; there's just a default bundle" of about thirty microlibraries. This circle-packing is <code>d3.hierarchy</code> + <code>d3.pack</code>, so D3 is drawing its own table of contents.</p>
     <ul>
       <li><b>Step 1:</b> d3js.org's stacked-area example uses a CSV parser, time + linear + ordinal scales, a categorical scheme, the stack layout, the area shape, axes and selections. That's eight pieces from six modules for one chart.</li>
       <li><b>Step 2:</b> most modules never touch the DOM (scales, shapes, layouts, geo). That's why they outlived the SVG-only era: they work with Canvas, WebGL, React…</li>

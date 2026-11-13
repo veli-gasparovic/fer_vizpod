@@ -456,3 +456,8 @@ body.hide-chrome .stepnav, body.presenter .stepnav { display: none !important; }
 .hero-qr { width: 6.5rem; height: 6.5rem; flex: none; border-radius: 0.3rem; }
 .hero-connect span { display: block; font-size: 0.72rem; color: var(--ink-2); }
 .hero-connect b { display: block; font-family: var(--font-mono); font-size: 1.15rem; font-weight: 600; color: var(--ink); }
+
+header.slide-head { position: relative; }
+.head-link { position: absolute; right: 0; bottom: 0.35rem; font: 600 0.78rem var(--font-mono); text-decoration: none;
+  color: var(--accent-2); border: 1px solid var(--rule); border-radius: 999px; padding: 0.3rem 0.8rem; background: var(--surface); }
+.head-link:hover { border-color: var(--accent-2); }
