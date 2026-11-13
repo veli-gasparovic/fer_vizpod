@@ -74,7 +74,7 @@
       <li><b>Step 0:</b> they look identical at this size. That's the trap.</li>
       <li><b>Step 1, zoom in:</b> the raster drops to 16 × 16 and you see the pixel grid: staircase edges, blurry anti-aliasing. The vector shows its geometry: corners, centre, radius, end points. Drag the resolution slider; hover a pixel.</li>
       <li><b>Step 2, what is stored:</b> raster = 4 bytes (R, G, B, A) per pixel, and nothing else; there is no "circle" in a PNG. Vector = three lines of markup, same size at any zoom. Hover a shape on the right: its line lights up.</li>
-      <li><b>Step 3, trade-offs:</b> vector for charts, maps, text; raster wins for photos and for very many marks (we come back to that with canvas, slide 28).</li>
+      <li><b>Step 3, trade-offs:</b> vector for charts, maps, text; raster wins for photos and for very many marks.</li>
     </ul>
   </aside>
 </section>
@@ -149,7 +149,7 @@
   <aside class="notes">
     <p><b>4 min.</b> Four dates that explain why "interactive" isn't a gimmick. Let them <i>feel</i> each one for 30–40 s before you name it.</p>
     <p><b>1 Shneiderman:</b> drag the box over the stripes (zoom), hover a bar (details). "Overview first" is the stripes; the full version is slide 26.</p>
-    <p><b>2 Heer &amp; Robertson:</b> it autoplays. Ask "where did the red bar go?" Left is hopeless, right is easy. That's their experiment in 3 seconds, and it's why D3 has transitions and keys (slide 22 does it with real data).</p>
+    <p><b>2 Heer &amp; Robertson:</b> it autoplays. Ask "where did the red bar go?" Left is hopeless, right is easy. That's their experiment in 3 seconds, and it's why D3 has transitions and keys (slide 20 does it with real data).</p>
     <p><b>3 Bret Victor:</b> drag the baseline box on the stripes all the way left (1850), then right (1990s): the same year goes from "very warm" to "barely warm", and the stripes recolour. A sentence you can argue with. The whole deck is meant to be this.</p>
     <p><b>4 512 Paths:</b> starts at Obama 431 of 512 paths. Click FL once (Obama): 255 of 256, game over. Click FL again (Romney): Obama still wins 176 of 256. Click OH twice (Romney too): 60 vs 64, a coin toss. That was the NYT's point: Romney needed nearly everything. Each branch is a data element, so fixing a state is enter/exit. 2012 electoral votes; safe states 237–191.</p>
   </aside>
@@ -188,7 +188,7 @@
   </div>
   <aside class="notes">
     <p><b>3 min, video</b> (Fireship, "SVG Explained in 100 Seconds", 2:20 long, starts at 0:04). Click ▶, then click outside the video to get the arrow keys back. Leaving the slide pauses it.</p>
-    <p>Before playing: "the timeline said the standards won. Here is the one we will use all day." Afterwards, point at three things to remember: elements + attributes (D3 selects and modifies exactly these), <code>viewBox</code> (responsive stripes later), and the path <code>d</code> string (slide 16 generates it).</p>
+    <p>Before playing: "the timeline said the standards won. Here is the one we will use all day." Afterwards, point at three things to remember: elements + attributes (D3 selects and modifies exactly these), <code>viewBox</code> (responsive stripes later), and the path <code>d</code> string (slide 22 generates it).</p>
     <p>No network: skip it, the link is under the frame.</p>
   </aside>
 </section>
@@ -305,38 +305,11 @@
   <aside class="notes">
     <p><b>4 min.</b> Drag the domain handles (top), the range handles (bottom) and the value. The readout shows the function call. Steps walk through linear → inverted range (SVG's y-axis points down) → log → band → colour (range doesn't have to be pixels).</p>
     <p>An axis is just "a scale, drawn". The visualization literacy point: whoever controls the domain controls the story.</p>
+    <p>Wrap up block 1: selections, the join, scales. After the break: three real projects, then we turn scales into charts.</p>
   </aside>
 </section>
 
-<!-- 15 -->
-<section class="slide" id="render" data-block="1" data-minutes="4" data-title="Anatomy of a chart: scales, axes, marks, shapes">
-  <div class="slide-inner">
-    <header class="slide-head"><div class="kicker">What · from scales to a chart</div><h2>Scales → axes → marks → shapes</h2></header>
-    <div class="widget grow" data-widget="anatomy"></div>
-  </div>
-  <aside class="notes">
-    <p><b>4 min.</b> One chart, built up a layer at a time. The code panel always shows the code for the current layer, with the real numbers.</p>
-    <ul>
-      <li><b>Step 0, margins + scales:</b> the plot area sits inside the margins. Point at the flipped y range: SVG's origin is top-left, y grows down.</li>
-      <li><b>Step 1, axes:</b> an axis is a scale drawn into a <code>&lt;g&gt;</code>. Move the pointer over the plot: <code>invert()</code> runs the scale backwards (this is how brushing and tooltips find data).</li>
-      <li><b>Step 2, marks:</b> the join from two slides ago, positioned by scale calls. Hover a circle; press <b>new data</b>.</li>
-      <li><b>Step 3, rescale:</b> the domain animates to [0, 50]. Then grab the y axis and drag it up and down: marks and axis stay in sync because they share one scale. Same <code>.transition().call(yAxis)</code> as in your <code>d3.html</code> <code>render()</code>.</li>
-      <li><b>Step 4, shapes:</b> <code>d3.line()</code> / <code>d3.area()</code> turn the whole array into one path string. Toggle the curve. Next slide opens up that string.</li>
-    </ul>
-  </aside>
-</section>
 
-<!-- 16 -->
-<section class="slide" id="shapes" data-block="1" data-minutes="3" data-title="Shape generators: data → path d">
-  <div class="slide-inner">
-    <header class="slide-head"><div class="kicker">What · shape generators</div><h2>Data in, a path string <code>d</code> out</h2></header>
-    <div class="widget grow" data-widget="curves"></div>
-  </div>
-  <aside class="notes">
-    <p><b>3 min.</b> Drag the points and switch the curve. The <code>d</code> string updates live. Step 1: a star is also just a <code>d3.line()</code> over computed points (from <code>stars.js</code>). Change the number of points and the curve (<code>curveLinearClosed</code> vs <code>curveBasisClosed</code>).</p>
-    <p>Wrap up block 1: selections, join, scales, shapes. After the break we build things.</p>
-  </aside>
-</section>
 
 <!-- =====================================================================
      BREAK
@@ -350,7 +323,7 @@
   </aside>
 </section>
 
-<!-- 17 -->
+<!-- 15 -->
 <section class="slide" id="mine" data-block="2" data-minutes="2" data-title="My D3: the Resilience Index">
   <div class="slide-inner">
     <header class="slide-head">
@@ -366,7 +339,7 @@
   </aside>
 </section>
 
-<!-- 18 -->
+<!-- 16 -->
 <section class="slide" id="lighthouses" data-block="2" data-minutes="2" data-title="My D3: Lighthouses of Croatia">
   <div class="slide-inner">
     <header class="slide-head">
@@ -382,7 +355,7 @@
   </aside>
 </section>
 
-<!-- 19 -->
+<!-- 17 -->
 <section class="slide" id="pantovcak" data-block="2" data-minutes="2" data-title="My D3: Pantovčak 2024">
   <div class="slide-inner">
     <header class="slide-head">
@@ -402,7 +375,7 @@
      BLOCK 2 · HOW  (45 min)
      ===================================================================== -->
 
-<!-- 20 -->
+<!-- 18 -->
 <section class="slide" id="poll" data-block="2" data-minutes="3" data-title="Where are you? (live data join)">
   <div class="slide-inner">
     <header class="slide-head"><div class="kicker">How · real-time data join</div><h2>Where are you? Tap on your phone.</h2></header>
@@ -416,7 +389,7 @@
   </aside>
 </section>
 
-<!-- 21 -->
+<!-- 19 -->
 <section class="slide" id="constancy" data-block="2" data-minutes="3" data-title="Transitions & object constancy">
   <div class="slide-inner">
     <header class="slide-head"><div class="kicker">How · transitions</div><h2>Animate, but keep track of who is who</h2></header>
@@ -429,6 +402,35 @@
       <li><b>Step 1, key = county:</b> bars travel to their new place. This is Heer &amp; Robertson 2007 in code.</li>
       <li><b>Step 2:</b> play with easing and duration. <code>easeBounce</code> is fun once, then never again.</li>
     </ul>
+  </aside>
+</section>
+
+<!-- 20 -->
+<section class="slide" id="render" data-block="2" data-minutes="4" data-title="Anatomy of a chart: scales, axes, marks, shapes">
+  <div class="slide-inner">
+    <header class="slide-head"><div class="kicker">How · from scales to a chart</div><h2>Scales → axes → marks → shapes</h2></header>
+    <div class="widget grow" data-widget="anatomy"></div>
+  </div>
+  <aside class="notes">
+    <p><b>4 min.</b> One chart, built up a layer at a time. The code panel always shows the code for the current layer, with the real numbers.</p>
+    <ul>
+      <li><b>Step 0, margins + scales:</b> the plot area sits inside the margins. Point at the flipped y range: SVG's origin is top-left, y grows down.</li>
+      <li><b>Step 1, axes:</b> an axis is a scale drawn into a <code>&lt;g&gt;</code>. Move the pointer over the plot: <code>invert()</code> runs the scale backwards (this is how brushing and tooltips find data).</li>
+      <li><b>Step 2, marks:</b> the join from two slides ago, positioned by scale calls. Hover a circle; press <b>new data</b>.</li>
+      <li><b>Step 3, rescale:</b> the domain animates to [0, 50]. Then grab the y axis and drag it up and down: marks and axis stay in sync because they share one scale. Same <code>.transition().call(yAxis)</code> as in your <code>d3.html</code> <code>render()</code>.</li>
+      <li><b>Step 4, shapes:</b> <code>d3.line()</code> / <code>d3.area()</code> turn the whole array into one path string. Toggle the curve. Next slide opens up that string.</li>
+    </ul>
+  </aside>
+</section>
+
+<!-- 21 -->
+<section class="slide" id="shapes" data-block="2" data-minutes="3" data-title="Shape generators: data → path d">
+  <div class="slide-inner">
+    <header class="slide-head"><div class="kicker">How · shape generators</div><h2>Data in, a path string <code>d</code> out</h2></header>
+    <div class="widget grow" data-widget="curves"></div>
+  </div>
+  <aside class="notes">
+    <p><b>3 min.</b> Drag the points and switch the curve. The <code>d</code> string updates live. Step 1: a star is also just a <code>d3.line()</code> over computed points (from <code>stars.js</code>). Change the number of points and the curve (<code>curveLinearClosed</code> vs <code>curveBasisClosed</code>).</p>
   </aside>
 </section>
 
@@ -508,19 +510,8 @@
   </aside>
 </section>
 
-<!-- 27 -->
-<section class="slide" id="renderers" data-block="2" data-minutes="2" data-title="SVG vs Canvas">
-  <div class="slide-inner">
-    <header class="slide-head"><div class="kicker">How · choosing a renderer</div><h2>When the document gets too big</h2></header>
-    <div class="widget grow" data-widget="stress"></div>
-  </div>
-  <aside class="notes">
-    <p><b>2 min.</b> Push N up until SVG drops frames. SVG: hundreds to low thousands of elements, native events, inspectable, accessible. Canvas: tens of thousands, but you hit-test yourself (d3-quadtree / d3-delaunay). WebGL: millions.</p>
-    <p>Same <code>d3.scaleLinear</code> drives both. That's the renderer-agnostic point from the toolbox slide.</p>
-  </aside>
-</section>
 
-<!-- 28 -->
+<!-- 27 -->
 <section class="slide" id="takeaways" data-block="2" data-minutes="1" data-title="Three takeaways">
   <div class="slide-inner">
     <header class="slide-head"><div class="kicker">Wrap-up</div><h2>Three things to keep</h2></header>
@@ -533,7 +524,7 @@
   <aside class="notes"><p><b>1 min.</b></p></aside>
 </section>
 
-<!-- 29 -->
+<!-- 28 -->
 <section class="slide" id="resources" data-block="2" data-minutes="1" data-title="Resources">
   <div class="slide-inner">
     <header class="slide-head"><div class="kicker">Where to go next</div><h2>Read next</h2></header>
@@ -583,7 +574,6 @@
 <script src="js/widgets/anatomy.js"></script>
 <script src="js/widgets/curves.js"></script>
 <script src="js/widgets/sortbars.js"></script>
-<script src="js/widgets/stress.js"></script>
 <script src="js/widgets/palettelab.js"></script>
 <script src="js/widgets/mantra.js"></script>
 <script src="js/widgets/dotsockets.js"></script>
